@@ -1,10 +1,4 @@
 <script setup>
-import CountDownExamDate from '@/views/dashboard/CountDownExamDate.vue'
-import GetTopicToLearn from '@/views/dashboard/GetTopicToLearn.vue'
-import Membership from '@/views/dashboard/Membership.vue'
-import QestionPacketIsAvailable from '@/views/dashboard/QestionPacketIsAvailable.vue'
-import QuestionPacketIsDone from '@/views/dashboard/QuestionPacketIsDone.vue'
-import QuestionPacketOnProgress from '@/views/dashboard/QuestionPacketOnProgress.vue'
 
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
@@ -27,7 +21,7 @@ onMounted(async () => {
   
   if (token) {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/student/profile', {
+      const response = await axios.get('https://gateway.berkompeten.com/api/admin/profile', {
         headers: {  
           Authorization: `Bearer ${token}`,
         },
@@ -53,7 +47,7 @@ onMounted(async () => {
 
 <template>
   <VRow v-if="token" class="match-height">
-    <VCol
+    <!-- <VCol
       cols="12"
       sm="3"
     >
@@ -93,6 +87,6 @@ onMounted(async () => {
       md="6"
     >
       <GetTopicToLearn />
-    </VCol>
+    </VCol> -->
   </VRow>
 </template>

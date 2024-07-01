@@ -1,6 +1,6 @@
 <script setup>
+import QuestionList from '@/views/pages/question/QuestionList.vue';
 
-import noDataImage from '@images/report_gen.svg?raw';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -38,13 +38,7 @@ onMounted(async () => {
       cols="12"
       md="12"
     >
-      <VCardItem class="justify-center">
-        <template #prepend>
-          <div class="d-flex">
-            <div v-html="noDataImage" />
-          </div>
-        </template>
-      </VCardItem>
+      <QuestionList />
     </VCol>
   </VRow>
 </template>

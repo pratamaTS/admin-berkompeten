@@ -11,7 +11,7 @@ const router = useRouter();
 onMounted(async () => {
   if (token) {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/student/profile', {
+      const response = await axios.get('https://gateway.berkompeten.com/api/admin/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,17 +43,73 @@ onMounted(async () => {
 
   <VerticalNavLink
       :item="{
-        title: 'Paket Soal',
-        to: '/paket-soal',
+        title: 'Question Packet Management',
+        to: '/question-packet-management',
         icon: 'ri-file-edit-line',
       }"
   />
 
   <VerticalNavLink
       :item="{
-        title: 'Hasil Analisa & Advis',
-        to: '/analisa-advis',
-        icon: 'ri-bar-chart-2-line',
+        title: 'Question Management',
+        to: '/question-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'User Management',
+        to: '/user-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Admin Management',
+        to: '/admin-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Membership Management',
+        to: '/membership-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Category Lab Management',
+        to: '/category-lab-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'University Management',
+        to: '/university-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Educational Status Management',
+        to: '/educational-status-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Exam Dates Management',
+        to: '/exam-dates-management',
+        icon: 'ri-file-edit-line',
       }"
   />
  

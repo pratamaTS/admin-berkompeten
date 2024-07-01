@@ -10,7 +10,7 @@ const profile = ref(null)
 
 onMounted(async () => {
   try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/student/profile', {
+      const response = await axios.get('https://gateway.berkompeten.com/api/admin/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,5 +1,4 @@
 <script setup>
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import logo from '@images/berkompeten_logo.svg?raw'
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
@@ -59,7 +58,7 @@ const login = async (tokenRecaptcha) => {
           return
         }
 
-        const response = await axios.post('https://gateway.berkompeten.com/api/student/login', {
+        const response = await axios.post('https://gateway.berkompeten.com/api/admin/login', {
           email: form.email,
           password: form.password,
           'g-recaptcha-response': tokenRecaptcha, // Include reCAPTCHA token in the request
@@ -104,12 +103,6 @@ const login = async (tokenRecaptcha) => {
     console.error('Login failed:', error)
     if (error.response && error.response.data) {
       loginError.value = error.response.data.errors;
-
-      // Check if the user does not exist and store email in local storage
-      if (error.response.data.is_exist === false) {
-        localStorage.setItem('email', form.email);
-        router.push('/register');
-      }
       return
     } else {
       loginError.value = 'An unexpected error occurred during login.';
@@ -196,37 +189,6 @@ const login = async (tokenRecaptcha) => {
               <div v-if="loginError" class="mt-2 text-danger" style="color: #ff5252;">
                 {{ loginError }}
               </div>
-            </VCol>
-
-            <!-- create account -->
-            <VCol
-              cols="12"
-              class="text-center text-base"
-            >
-              <span>New on our platform?</span>
-              <RouterLink
-                class="text-primary ms-2"
-                to="/register"
-              >
-                Create an account
-              </RouterLink>
-            </VCol>
-
-            <VCol
-              cols="12"
-              class="d-flex align-center"
-            >
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
-
-            <!-- auth providers -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <AuthProvider />
             </VCol>
           </VRow>
         </VForm>
