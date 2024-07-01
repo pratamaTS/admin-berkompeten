@@ -76,11 +76,11 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in filteredData" :key="user.id">
-          <td>{{ user.name }}</td>
-          <td class="text-center">{{ user.is_active }}</td>
-          <td class="text-center">{{ user.created_at }}</td>
-          <td class="text-center">{{ user.updated_at }}</td>
+        <tr v-for="qp in filteredData" :key="qp.id">
+          <td>{{ qp.name }}</td>
+          <td class="text-center">{{ qp.is_active }}</td>
+          <td class="text-center">{{ qp.created_at }}</td>
+          <td class="text-center">{{ qp.updated_at }}</td>
         </tr>
       </tbody>
     </VTable>

@@ -24,6 +24,7 @@ const fetchData = async (page = 1) => {
       },
     });
     datas.value = response.data.data;
+    console.log(datas.value);
     pagination.value = response.data;
   } catch (error) {
     console.log("err: ", error);
