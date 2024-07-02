@@ -16,7 +16,7 @@ onMounted(async () => {
         },
       });
 
-      profile.value = response.data.profile;
+      profile.value = response.data.data;
 
       console.log("profile: ", profile);
       console.log("name: ", name);
@@ -40,19 +40,10 @@ const profilePage = async () => {
   }
 };
 
-const membershipPage = async () => {
-  try {
-    console.log("profile: ", profile)
-    router.push('/upgrade/membership');
-  } catch (error) {
-    console.error('Profile error:', error);
-  }
-};
-
 const logout = async () => {
   try {
     // Make a request to the logout endpoint on your backend
-    const response = await axios.post('https://gateway.berkompeten.com/api/student/logout', null, {
+    const response = await axios.post('https://gateway.berkompeten.com/api/admin/logout', null, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -97,7 +88,7 @@ const logout = async () => {
       <VListItemTitle class="font-weight-semibold">
         {{ profile.name }}
       </VListItemTitle>
-      <VListItemSubtitle>{{ profile.role }}</VListItemSubtitle>
+      <VListItemSubtitle>Admin</VListItemSubtitle>
     </VListItem>
     <!-- SECTION Menu -->
     <VMenu
@@ -131,7 +122,7 @@ const logout = async () => {
           <VListItemTitle class="font-weight-semibold">
             {{ profile.name }}
           </VListItemTitle>
-          <VListItemSubtitle>{{ profile.role }}</VListItemSubtitle>
+          <VListItemSubtitle>Admin</VListItemSubtitle>
         </VListItem>
         <VDivider class="my-2" />
 
@@ -146,22 +137,6 @@ const logout = async () => {
           </template>
 
           <VListItemTitle>Profile</VListItemTitle>
-        </VListItem>
-
-        <!-- Divider -->
-        <VDivider class="my-2" />
-
-        <!-- 👉 Upgrade Membership -->
-        <VListItem @click="membershipPage">
-          <template #prepend>
-            <VIcon
-              class="me-2"
-              icon="ri-vip-crown-line"
-              size="22"
-            />
-          </template>
-
-          <VListItemTitle>Upgrade Membership</VListItemTitle>
         </VListItem>
 
         <!-- Divider -->

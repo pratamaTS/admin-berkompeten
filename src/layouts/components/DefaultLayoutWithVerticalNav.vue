@@ -52,9 +52,10 @@ onMounted(async () => {
         },
       });
 
-      name.value = response.data.profile.name;
+      name.value = response.data.data.name;
 
       console.log("data: ", response.data);
+      console.log("name: ", name);
     } catch (error) {
       console.log("err: ", error);
       if (error.response && error.response.status === 401) {

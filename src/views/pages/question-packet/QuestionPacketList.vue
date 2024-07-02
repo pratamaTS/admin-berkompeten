@@ -23,8 +23,8 @@ const fetchData = async (page = 1) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    datas.value = response.data.data;
-    pagination.value = response.data;
+    datas.value = response.data.data.data;
+    pagination.value = response.data.data;
   } catch (error) {
     console.log("err: ", error);
     if (error.response && error.response.status === 401) {
@@ -85,8 +85,8 @@ onMounted(() => {
       </tbody>
     </VTable>
     <div>
-      <button @click="prevPage" :disabled="!pagination.prev_page_url">Previous</button>
-      <button @click="nextPage" :disabled="!pagination.next_page_url">Next</button>
+      <VBtn @click="prevPage" :disabled="!pagination.prev_page_url" class="mx-1">Previous</VBtn>
+      <VBtn @click="nextPage" :disabled="!pagination.next_page_url" class="mx-1">Next</VBtn>
     </div>
   </div>
 </template>

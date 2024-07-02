@@ -33,7 +33,7 @@ onMounted(async () => {
         },
       });
 
-      const profile = response.data.profile
+      const profile = response.data.data
 
       accountDataLocal.email = profile.email
       // Splitting the full name into an array
@@ -43,17 +43,8 @@ onMounted(async () => {
       accountDataLocal.firstName = fullNameArray[0];
       accountDataLocal.lastName = fullNameArray.slice(1).join(' ');
 
-      accountDataLocal.phone = profile.phone_number
-      accountDataLocal.role = profile.role
-      accountDataLocal.gender = profile.gender
-      accountDataLocal.year_of_entry = profile.year_of_entry
-      accountDataLocal.target_exam_date = profile.target_exam_date
+      accountDataLocal.role = "Admin"
 
-      await fetchEducationalStatusDetail(profile.educational_status_id)
-      await fetchUniversityDetail(profile.university_id)
-
-      console.log("resp profile: ", response.data.profile);
-      console.log("name: ", response.data.profile.name);
     } catch (error) {
       console.log("err: ", error);
       if (error.response && error.response.status === 401) {
@@ -142,43 +133,6 @@ const currencies = [
   'HUF',
   'INR',
 ]
-
-// Fetch univeristy options from the API
-const fetchUniversityDetail = async (id) => {
-  try {
-    console.log("param universitas: ", id)
-    const response = await axios.get('https://gateway.berkompeten.com/api/student/master/university/detail?id='+id, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    console.log("response universitas: ", response)
-    const universityData = response.data.university
-
-    accountDataLocal.university = universityData.name
-  } catch (error) {
-    console.error('Error fetching university options:', error)
-  }
-}
-
-// Fetch educational status options from the API
-const fetchEducationalStatusDetail = async (id) => {
-  try {
-    console.log("param edu: ", id)
-    const response = await axios.get('https://gateway.berkompeten.com/api/student/master/educational-status/detail?id='+id, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    console.log("response edu: ", response)
-    // Assuming the API response has an array of educational statuses
-    const educationalData = response.data.educational_status
-
-    accountDataLocal.educational_status = educationalData.name
-  } catch (error) {
-    console.error('Error fetching educational status options:', error)
-  }
-}
 </script>
 
 <template>
@@ -292,84 +246,6 @@ const fetchEducationalStatusDetail = async (id) => {
                   v-model="accountDataLocal.role"
                   label="Role"
                   placeholder="Student"
-                  readonly
-                />
-              </VCol>
-
-              <!-- 👉 Phone -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  v-model="accountDataLocal.phone"
-                  label="Phone Number"
-                  placeholder="+1 (917) 543-9876"
-                  readonly
-                />
-              </VCol>
-
-              <!-- 👉 Gender -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  v-model="accountDataLocal.gender"
-                  label="Jenis Kelamin"
-                  placeholder="123 Main St, New York, NY 10001"
-                  readonly
-                />
-              </VCol>
-
-              <!-- 👉 Year of Entry -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  v-model="accountDataLocal.year_of_entry"
-                  label="Tahun Masuk"
-                  placeholder="New York"
-                  readonly
-                />
-              </VCol>
-
-              <!-- 👉 Target Exam Date -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  v-model="accountDataLocal.target_exam_date"
-                  label="Tanggal Ujian"
-                  placeholder="10001"
-                  readonly
-                />
-              </VCol>
-
-              <!-- 👉 Univeristy -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  v-model="accountDataLocal.university"
-                  label="Universitas"
-                  placeholder="10001"
-                  readonly
-                />
-              </VCol>
-
-              <!-- 👉 Educational Status -->
-              <VCol
-                cols="12"
-                md="6"
-              >
-                <VTextField
-                  v-model="accountDataLocal.educational_status"
-                  label="Status Edukasi"
-                  placeholder="10001"
                   readonly
                 />
               </VCol>

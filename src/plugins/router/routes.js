@@ -17,6 +17,10 @@ export const routes = [
         component: () => import('@/pages/question-management.vue'),
       },
       {
+        path: 'question/detail',
+        component: () => import('@/pages/question-detail.vue'),
+      },
+      {
         path: 'profile/:tab',
         component: () => import('@/pages/account-settings.vue'),
       },

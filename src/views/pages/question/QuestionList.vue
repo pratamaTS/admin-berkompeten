@@ -1,12 +1,14 @@
 <script setup>
 import axios from 'axios';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const token = localStorage.getItem('token');
 const datas = ref([]);
 const searchQuery = ref('');
+const selectedPacket = ref(null);
+const questionPacketsOption = ref([]);
 const pagination = ref({
   current_page: 1,
   from: 1,
@@ -16,16 +18,20 @@ const pagination = ref({
   total: 0,
 });
 
-const fetchData = async (page = 1) => {
+const fetchData = async (page = 1, questionPacketId = null) => {
   try {
-    const response = await axios.get(`https://gateway.berkompeten.com/api/admin/master/question?page=${page}`, {
+    let url = `https://gateway.berkompeten.com/api/admin/master/question?page=${page}`;
+    if (questionPacketId) {
+      console.log("Q: ", questionPacketId)
+      url += `&question_packet_id=${questionPacketId}`;
+    }
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    datas.value = response.data.data;
-    console.log(datas.value);
-    pagination.value = response.data;
+    datas.value = response.data.data.data;
+    pagination.value = response.data.data;
   } catch (error) {
     console.log("err: ", error);
     if (error.response && error.response.status === 401) {
@@ -35,28 +41,49 @@ const fetchData = async (page = 1) => {
   }
 };
 
-const filteredData = computed(() => {
-  if (!searchQuery.value) {
-    return datas.value;
+const fetchQuestionPackets = async () => {
+  try {
+    const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/question-packet/fetch', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    questionPacketsOption.value = response.data.data.map(d => ({
+      id: d.id,
+      name: d.name,
+    }));
+  } catch (error) {
+    console.error('Error fetching question packet options:', error);
   }
-  return datas.value.filter(data => 
-  data.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.question_packet.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.subtopic_list.subtopic.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.question_number.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.scenario.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.question.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.option_a.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.option_b.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.option_c.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.option_d.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.option_e.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.correct_answer.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.image_url.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.discussion.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.created_at.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    data.updated_at.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+};
+
+watch(selectedPacket, (newValue) => {
+  fetchData(1, newValue);
+});
+
+const filteredData = computed(() => {
+  let filtered = datas.value;
+
+  if (searchQuery.value) {
+    filtered = filtered.filter(data =>
+      data.question_packet.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.subtopic_list.subtopic.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.question_number.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.scenario.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.question.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.option_a.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.option_b.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.option_c.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.option_d.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.option_e.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.correct_answer.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.image_url.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.discussion.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.created_at.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  }
+
+  return filtered;
 });
 
 const nextPage = () => {
@@ -72,7 +99,7 @@ const prevPage = () => {
 };
 
 const createData = () => {
-  router.push(`/question/detail?id=${id}`);
+  router.push(`/question/detail`);
 };
 
 const downloadTemplate = async () => {
@@ -100,7 +127,8 @@ const bulkUpsert = () => {
 };
 
 const editData = (id) => {
-  router.push(`/question/detail?id=${id}`);
+  localStorage.setItem('question_packet_id', id)
+  router.push(`/question/detail`);
 };
 
 const deleteData = async (id) => {
@@ -118,65 +146,100 @@ const deleteData = async (id) => {
 
 onMounted(() => {
   fetchData();
+  fetchQuestionPackets();
 });
 </script>
 
 <template>
   <div>
     <div class="table-header">
-      <input v-model="searchQuery" placeholder="Search..." />
-      <button @click="createData">Create</button>
-      <button @click="bulkUpsert">Bulk Upsert</button>
-      <button @click="downloadTemplate">Download Template</button>
+      <VTextField v-model="searchQuery" label="Search" class="mx-3" solo />
+      <VSelect
+        v-model="selectedPacket"
+        :items="questionPacketsOption"
+        item-value="id"
+        item-title="name"
+        label="Filter by Packet"
+        class="mx-3"
+        solo
+        clearable
+      />
+      <VBtn color="#0080ff" class="mx-1" @click="createData">Create</VBtn>
+      <VBtn color="#0080ff" class="mx-1" @click="bulkUpsert">Bulk Upsert</VBtn>
+      <VBtn color="#0080ff" class="mx-1" @click="downloadTemplate">Download Template</VBtn>
     </div>
-    <VTable height="250" fixed-header>
-      <thead>
-        <tr>
-          <th>Packet Name</th>
-          <th>Subtopic Name</th>
-          <th>Question Number</th>
-          <th>Question</th>
-          <th>Option A</th>
-          <th>Option B</th>
-          <th>Option C</th>
-          <th>Option D</th>
-          <th>Option E</th>
-          <th>Correct Answer</th>
-          <th>Discussion</th>
-          <th>Is Active</th>
-          <th>Created At</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="question in filteredData" :key="question.id">
-          <td>{{ question.question_packet.name }}</td>
-          <td>{{ question.subtopic_list.subtopic }}</td>
-          <td>{{ question.question_number }}</td>
-          <td>{{ question.question }}</td>
-          <td>{{ question.option_a }}</td>
-          <td>{{ question.option_b }}</td>
-          <td>{{ question.option_c }}</td>
-          <td>{{ question.option_d }}</td>
-          <td>{{ question.option_e }}</td>
-          <td>{{ question.correct_answer }}</td>
-          <td v-html="question.discussion"></td>
-          <td>{{ question.is_active }}</td>
-          <td>{{ question.created_at }}</td>
-          <td>
-            <button @click="editData(question.id)">
-              <span class="material-icons">edit</span>
-            </button>
-            <button @click="deleteData(question.id)">
-              <span class="material-icons">delete</span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </VTable>
-    <div>
-      <button @click="prevPage" :disabled="!pagination.prev_page_url">Previous</button>
-      <button @click="nextPage" :disabled="!pagination.next_page_url">Next</button>
+    <div class="table-container">
+      <VTable fixed-header>
+        <thead>
+          <tr>
+            <th>Packet Name</th>
+            <th>Subtopic Name</th>
+            <th>Question Number</th>
+            <th>Question</th>
+            <th>Option A</th>
+            <th>Option B</th>
+            <th>Option C</th>
+            <th>Option D</th>
+            <th>Option E</th>
+            <th>Correct Answer</th>
+            <th>Discussion</th>
+            <th>Is Active</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="question in filteredData" :key="question.id">
+            <td>{{ question.question_packet.name }}</td>
+            <td>{{ question.subtopic_list.subtopic }}</td>
+            <td>{{ question.question_number }}</td>
+            <td>{{ question.question }}</td>
+            <td>{{ question.option_a }}</td>
+            <td>{{ question.option_b }}</td>
+            <td>{{ question.option_c }}</td>
+            <td>{{ question.option_d }}</td>
+            <td>{{ question.option_e }}</td>
+            <td>{{ question.correct_answer }}</td>
+            <td v-html="question.discussion"></td>
+            <td>{{ question.is_active }}</td>
+            <td>{{ question.created_at }}</td>
+            <td>
+              <VBtn icon @click="editData(question.question_packet.id)" class="mx-1" color="#0080ff">
+                <VIcon>mdi-pencil</VIcon>
+              </VBtn>
+              <VBtn icon @click="deleteData(question.id)" class="mx-1" color="#0080ff">
+                <VIcon>mdi-delete</VIcon>
+              </VBtn>
+            </td>
+          </tr>
+        </tbody>
+      </VTable>
+    </div>
+    <div class="pagination">
+      <VBtn @click="prevPage" :disabled="!pagination.prev_page_url" class="mx-1" color="#0080ff">Previous</VBtn>
+      <VBtn @click="nextPage" :disabled="!pagination.next_page_url" class="mx-1" color="#0080ff">Next</VBtn>
     </div>
   </div>
 </template>
+
+<style scoped>
+.table-header {
+  display: flex;
+  align-items: center;
+  margin-block-end: 16px;
+}
+
+.table-container {
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 10%);
+  max-block-size: 500px;
+  overflow-y: auto;
+}
+
+.pagination {
+  display: flex;
+  justify-content: right;
+  margin-block-start: 16px;
+}
+</style>

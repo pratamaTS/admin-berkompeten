@@ -1,5 +1,5 @@
 <script setup>
-import QuestionDetailUpsert from '@/views/question-packet/QuestionDetailUpsert.vue';
+import QuestionDetailUpsert from '@/views/pages/question/QuestionDetailUpsert.vue';
 
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
