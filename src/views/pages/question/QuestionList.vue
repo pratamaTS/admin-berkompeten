@@ -87,14 +87,24 @@ const filteredData = computed(() => {
 });
 
 const nextPage = () => {
+  var questionPacketId = null
+  if (selectedPacket.value) {
+    questionPacketId = selectedPacket.value
+  }
+
   if (pagination.value.next_page_url) {
-    fetchData(pagination.value.current_page + 1);
+    fetchData(pagination.value.current_page + 1, questionPacketId);
   }
 };
 
 const prevPage = () => {
+  var questionPacketId = null
+  if (selectedPacket.value) {
+    questionPacketId = selectedPacket.value
+  }
+  
   if (pagination.value.prev_page_url) {
-    fetchData(pagination.value.current_page - 1);
+    fetchData(pagination.value.current_page - 1, questionPacketId);
   }
 };
 
