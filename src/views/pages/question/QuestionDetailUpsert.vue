@@ -84,6 +84,7 @@ useRouter
     }
   };
   const resetForm = () => {
+    localStorage.removeItem('question_packet_id');
     Object.assign(formData, {
       image_url: null,
       question_packet_id: null,
@@ -169,9 +170,11 @@ useRouter
       console.error("Error uploading image:", error);
     }
   };
+  
   const resetImage = () => {
     formData.image_url = '';
   };
+
   watch(() => formData.question_packet_id, (newVal, oldVal) => {
     console.log(`question_packet_id changed from ${oldVal} to ${newVal}`);
     if (newVal) {

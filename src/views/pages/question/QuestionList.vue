@@ -18,6 +18,11 @@ const pagination = ref({
   total: 0,
 });
 
+const isBulkUpsertDialogOpen = ref(false);
+const bulkUpsertFile = ref(null);
+const successMessage = ref('');
+const errorMessage = ref('');
+
 const fetchData = async (page = 1, questionPacketId = null) => {
   try {
     let url = `https://gateway.berkompeten.com/api/admin/master/question?page=${page}`;
@@ -43,7 +48,7 @@ const fetchData = async (page = 1, questionPacketId = null) => {
 
 const fetchQuestionPackets = async () => {
   try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/question-packet/fetch', {
+    const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/question-packet/fetch-all', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -133,7 +138,56 @@ const downloadTemplate = async () => {
 };
 
 const bulkUpsert = () => {
-  router.push('/bulk-upsert');
+  isBulkUpsertDialogOpen.value = true;
+};
+
+const closeBulkUpsertDialog = () => {
+  isBulkUpsertDialogOpen.value = false;
+  bulkUpsertFile.value = null;
+  successMessage.value = '';
+  errorMessage.value = '';
+};
+
+const handleBulkUpsert = async () => {
+  if (!bulkUpsertFile.value) {
+    errorMessage.value = 'Please upload a file'
+    setTimeout(() => {
+      errorMessage.value = ''
+    }, 5000);
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', bulkUpsertFile.value[0]);
+
+  console.log("FILE: ", bulkUpsertFile.value[0])
+
+  try {
+    const response = await axios.post('https://gateway.berkompeten.com/api/admin/master/question/bulk-upsert', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    successMessage.value = 'Bulk upsert completed successfully';
+    setTimeout(() => {
+      closeBulkUpsertDialog();
+      fetchData(pagination.value.current_page); 
+    }, 2000);
+  } catch (error) {
+    if (error.response && error.response.status === 422) {
+      errorMessage.value = 'Validation error: ' + JSON.stringify(error.response.data.message.file[0]);
+      setTimeout(() => {
+        errorMessage.value = '';
+      }, 5000);
+    } else {
+      errorMessage.value = 'Error bulk upsert: ' + error.response.data.message
+      setTimeout(() => {
+        errorMessage.value = '';
+      }, 5000);
+    }
+  }
 };
 
 const editData = (id) => {
@@ -178,6 +232,14 @@ onMounted(() => {
       <VBtn color="#0080ff" class="mx-1" @click="bulkUpsert">Bulk Upsert</VBtn>
       <VBtn color="#0080ff" class="mx-1" @click="downloadTemplate">Download Template</VBtn>
     </div>
+    <VCardText>
+      <VAlert v-if="successMessage" type="success" dismissible @click:close="successMessage = ''">
+        {{ successMessage }}
+      </VAlert>
+      <VAlert v-if="errorMessage" type="error" dismissible @click:close="errorMessage = ''">
+        {{ errorMessage }}
+      </VAlert>
+    </VCardText>
     <div class="table-container">
       <VTable fixed-header>
         <thead>
@@ -215,7 +277,7 @@ onMounted(() => {
             <td>{{ question.created_at }}</td>
             <td>
               <VBtn icon @click="editData(question.question_packet.id)" class="mx-1" color="#0080ff">
-                <VIcon>mdi-pencil</VIcon>
+                <VIcon>ri-hourglass-fill</VIcon>
               </VBtn>
               <VBtn icon @click="deleteData(question.id)" class="mx-1" color="#0080ff">
                 <VIcon>mdi-delete</VIcon>
@@ -229,6 +291,33 @@ onMounted(() => {
       <VBtn @click="prevPage" :disabled="!pagination.prev_page_url" class="mx-1" color="#0080ff">Previous</VBtn>
       <VBtn @click="nextPage" :disabled="!pagination.next_page_url" class="mx-1" color="#0080ff">Next</VBtn>
     </div>
+    <!-- Bulk Upsert Modal -->
+    <VDialog v-model="isBulkUpsertDialogOpen" max-width="500px">
+      <VCard>
+        <VCardTitle class="text-h5">Bulk Upsert</VCardTitle>
+        <VCardText>
+          <VFileInput
+            v-model="bulkUpsertFile"
+            label="Upload Excel File"
+            accept=".csv,.xlsx,.xls"
+            prepend-icon="mdi-upload"
+          />
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn color="blue darken-1" text @click="closeBulkUpsertDialog">Cancel</VBtn>
+          <VBtn color="#0080ff" text @click="handleBulkUpsert">Upload</VBtn>
+        </VCardActions>
+        <VCardText>
+          <VAlert v-if="successMessage" type="success" dismissible @click:close="successMessage = ''">
+            {{ successMessage }}
+          </VAlert>
+          <VAlert v-if="errorMessage" type="error" dismissible @click:close="errorMessage = ''">
+            {{ errorMessage }}
+          </VAlert>
+        </VCardText>
+      </VCard>
+    </VDialog>
   </div>
 </template>
 
