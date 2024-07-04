@@ -51,17 +51,13 @@ watch([searchQuery], ([newSearchValue]) => {
 
 const nextPage = () => {
   if (pagination.value.next_page_url) {
-    fetchData(pagination.value.current_page + 1, questionPacketId);
+    fetchData(pagination.value.current_page + 1);
   }
 };
 
 const prevPage = () => {
-  if (selectedPacket.value) {
-    questionPacketId = selectedPacket.value
-  }
-  
   if (pagination.value.prev_page_url) {
-    fetchData(pagination.value.current_page - 1, questionPacketId);
+    fetchData(pagination.value.current_page - 1);
   }
 };
 
