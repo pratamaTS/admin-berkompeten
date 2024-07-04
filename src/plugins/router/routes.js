@@ -13,12 +13,20 @@ export const routes = [
         component: () => import('@/pages/question-packet-management.vue'),
       },
       {
+        path: 'subtopic-management',
+        component: () => import('@/pages/subtopic-management.vue'),
+      },
+      {
         path: 'question-management',
         component: () => import('@/pages/question-management.vue'),
       },
       {
         path: 'question/detail',
         component: () => import('@/pages/question-detail.vue'),
+      },
+      {
+        path: 'question-packet/detail',
+        component: () => import('@/pages/question-packet-detail.vue'),
       },
       {
         path: 'profile/:tab',

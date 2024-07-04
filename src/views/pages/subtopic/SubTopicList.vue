@@ -25,7 +25,7 @@ const errorMessage = ref('');
 
 const fetchData = async (page = 1, searchQuery = '') => {
   try {
-    let url = `https://gateway.berkompeten.com/api/admin/master/question-packet?page=${page}`;
+    let url = `https://gateway.berkompeten.com/api/admin/master/subtopic?page=${page}`;
     if (searchQuery) {
       url += `&search=${searchQuery.toLowerCase()}`;
     }
@@ -67,7 +67,7 @@ const prevPage = () => {
 
 const createData = () => {
   localStorage.removeItem('id');
-  router.push(`/question-packet/detail`);
+  router.push(`/subtopic/detail`);
 };
 
 // const downloadTemplate = async () => {
@@ -146,12 +146,12 @@ const createData = () => {
 
 const editData = (id) => {
   localStorage.setItem('id', id)
-  router.push(`/question-packet/detail`);
+  router.push(`/subtopic/detail`);
 };
 
 const deleteData = async (id) => {
   try {
-    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/question-packet?question_packet_id=${id}`, {
+    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/subtopic?id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -188,7 +188,8 @@ onMounted(() => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Packet Name</th>
+            <th>Topic</th>
+            <th>SubTopic</th>
             <th>Is Active</th>
             <th>Created Date</th>
             <th>Actions</th>
@@ -197,11 +198,12 @@ onMounted(() => {
         <tbody>
           <tr v-for="item in datas" :key="item.id">
             <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
+            <td>{{ item.topic.topic }}</td>
+            <td>{{ item.subtopic }}</td>
             <td>{{ item.is_active }}</td>
             <td>{{ item.created_date }}</td>
             <td>
-              <div v-if="item.is_used === false">
+              <div>
                 <VBtn icon @click="editData(item.id)" class="mx-1" color="transparent" style=" padding: 0; border: none;background-color: transparent; box-shadow: none;">
                   <VIcon style="color: orange;">ri-edit-line</VIcon>
                 </VBtn>

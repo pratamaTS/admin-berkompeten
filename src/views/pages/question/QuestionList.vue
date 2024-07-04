@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -23,12 +23,15 @@ const bulkUpsertFile = ref(null);
 const successMessage = ref('');
 const errorMessage = ref('');
 
-const fetchData = async (page = 1, questionPacketId = null) => {
+const fetchData = async (page = 1, questionPacketId = null, searchQuery = '') => {
   try {
     let url = `https://gateway.berkompeten.com/api/admin/master/question?page=${page}`;
     if (questionPacketId) {
       console.log("Q: ", questionPacketId)
       url += `&question_packet_id=${questionPacketId}`;
+    }
+    if (searchQuery) {
+      url += `&search=${searchQuery.toLowerCase()}`;
     }
     const response = await axios.get(url, {
       headers: {
@@ -62,33 +65,8 @@ const fetchQuestionPackets = async () => {
   }
 };
 
-watch(selectedPacket, (newValue) => {
-  fetchData(1, newValue);
-});
-
-const filteredData = computed(() => {
-  let filtered = datas.value;
-
-  if (searchQuery.value) {
-    filtered = filtered.filter(data =>
-      data.question_packet.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.subtopic_list.subtopic.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.question_number.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.scenario.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.question.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.option_a.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.option_b.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.option_c.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.option_d.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.option_e.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.correct_answer.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.image_url.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.discussion.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      data.created_at.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-  }
-
-  return filtered;
+watch([selectedPacket, searchQuery], ([newPacketValue, newSearchValue]) => {
+  fetchData(1, newPacketValue, newSearchValue);
 });
 
 const nextPage = () => {
@@ -263,7 +241,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="question in filteredData" :key="question.id">
+          <tr v-for="question in datas" :key="question.id">
             <td>{{ question.question_packet.name }}</td>
             <td>{{ question.subtopic_list.subtopic }}</td>
             <td>{{ question.question_number }}</td>

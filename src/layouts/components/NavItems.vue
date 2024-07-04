@@ -40,6 +40,14 @@ onMounted(async () => {
         icon: 'ri-home-smile-line',
       }"
   />
+  
+  <VerticalNavLink
+      :item="{
+        title: 'Sub Topic Management',
+        to: '/subtopic-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
 
   <VerticalNavLink
       :item="{

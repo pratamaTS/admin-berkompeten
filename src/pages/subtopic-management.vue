@@ -1,5 +1,5 @@
 <script setup>
-import QuestionPacketDetailUpsert from '@/views/pages/question-packet/QuestionPacketDetailUpsert.vue';
+import SubTopicList from '@/views/pages/subtopic/SubTopicList.vue';
 
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
@@ -38,7 +38,7 @@ onMounted(async () => {
       cols="12"
       md="12"
     >
-      <QuestionPacketDetailUpsert />
+      <SubTopicList />
     </VCol>
   </VRow>
 </template>
