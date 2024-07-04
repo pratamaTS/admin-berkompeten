@@ -13,7 +13,7 @@ useRouter
 } from 'vue-router';
   const router = useRouter();
   const route = useRoute();
-  const id = localStorage.getItem('question_packet_id')
+  const id = localStorage.getItem('question_id')
   const questionPacketsOption = ref([])
   const subtopicListOption = ref([])
   const formData = reactive({
@@ -65,7 +65,6 @@ useRouter
       });
       successMessage.value = 'Question saved successfully!';
       setTimeout(() => {
-        localStorage.removeItem('question_packet_id');
         resetForm()
         router.push('/question-management'); // Redirect to the questions list page after a delay
       }, 2000);
@@ -84,7 +83,6 @@ useRouter
     }
   };
   const resetForm = () => {
-    localStorage.removeItem('question_packet_id');
     Object.assign(formData, {
       image_url: null,
       question_packet_id: null,
@@ -170,23 +168,26 @@ useRouter
       console.error("Error uploading image:", error);
     }
   };
-  
+
   const resetImage = () => {
     formData.image_url = '';
   };
 
   watch(() => formData.question_packet_id, (newVal, oldVal) => {
     console.log(`question_packet_id changed from ${oldVal} to ${newVal}`);
-    if (newVal) {
+    if (newVal && !id) {
       getNextQuestionNumber();
     }
   });
+
   onMounted(() => {
-    if (id) {
-      fetchData(id);
-    }
     fetchQuestionPackets()
     fetchSubTopicList()
+    if (id) {
+      fetchData(id);
+    }else{
+      localStorage.removeItem('question_id');
+    }
   });
 </script>
 

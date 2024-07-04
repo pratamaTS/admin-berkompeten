@@ -114,6 +114,7 @@ const prevPage = () => {
 };
 
 const createData = () => {
+  localStorage.removeItem('question_id');
   router.push(`/question/detail`);
 };
 
@@ -138,6 +139,7 @@ const downloadTemplate = async () => {
 };
 
 const bulkUpsert = () => {
+  localStorage.removeItem('question_id');
   isBulkUpsertDialogOpen.value = true;
 };
 
@@ -191,7 +193,7 @@ const handleBulkUpsert = async () => {
 };
 
 const editData = (id) => {
-  localStorage.setItem('question_packet_id', id)
+  localStorage.setItem('question_id', id)
   router.push(`/question/detail`);
 };
 
@@ -256,7 +258,7 @@ onMounted(() => {
             <th>Correct Answer</th>
             <th>Discussion</th>
             <th>Is Active</th>
-            <th>Created At</th>
+            <th>Created Date</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -274,14 +276,16 @@ onMounted(() => {
             <td>{{ question.correct_answer }}</td>
             <td v-html="question.discussion"></td>
             <td>{{ question.is_active }}</td>
-            <td>{{ question.created_at }}</td>
+            <td>{{ question.created_date }}</td>
             <td>
-              <VBtn icon @click="editData(question.question_packet.id)" class="mx-1" color="#0080ff">
-                <VIcon>ri-hourglass-fill</VIcon>
-              </VBtn>
-              <VBtn icon @click="deleteData(question.id)" class="mx-1" color="#0080ff">
-                <VIcon>mdi-delete</VIcon>
-              </VBtn>
+              <div v-if="question.is_used === false">
+                <VBtn icon @click="editData(question.id)" class="mx-1" color="transparent" style=" padding: 0; border: none;background-color: transparent; box-shadow: none;">
+                  <VIcon style="color: orange;">ri-edit-line</VIcon>
+                </VBtn>
+                <VBtn icon @click="deleteData(question.id)" class="mx-1" color="transparent" style=" padding: 0; border: none;background-color: transparent; box-shadow: none;">
+                  <VIcon style="color: red;">ri-delete-bin-line</VIcon>
+                </VBtn>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -336,9 +340,29 @@ onMounted(() => {
   overflow-y: auto;
 }
 
+.v-table thead tr {
+  background-color: #f5f5f5;
+}
+
+.v-table th, .v-table td {
+  border-block-end: 1px solid #e0e0e0;
+  padding-block: 12px;
+  padding-inline: 8px;
+  text-align: start;
+}
+
+.v-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
 .pagination {
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   margin-block-start: 16px;
+}
+
+.v-btn {
+  margin-block: 0;
+  margin-inline: 4px;
 }
 </style>
