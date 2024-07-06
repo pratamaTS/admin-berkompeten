@@ -84,7 +84,7 @@ const handleUpload = async () => {
   }
 
   const formData = new FormData();
-  formData.append('file', uploadFile.value[0]);
+  formData.append('image', uploadFile.value[0]);
 
   console.log("FILE: ", uploadFile.value[0])
 
@@ -96,7 +96,7 @@ const handleUpload = async () => {
       },
     });
 
-    successMessage.value = 'Bulk upsert completed successfully';
+    successMessage.value = 'Upload image completed successfully';
     setTimeout(() => {
       closeUploadDialog();
       fetchData(pagination.value.current_page); 
@@ -108,7 +108,7 @@ const handleUpload = async () => {
         errorMessage.value = '';
       }, 5000);
     } else {
-      errorMessage.value = 'Error bulk upsert: ' + error.response.data.message
+      errorMessage.value = 'Error upload image: ' + error.response.data.message
       setTimeout(() => {
         errorMessage.value = '';
       }, 5000);
