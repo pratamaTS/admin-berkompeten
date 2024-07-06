@@ -51,6 +51,14 @@ onMounted(async () => {
 
   <VerticalNavLink
       :item="{
+        title: 'Media Management',
+        to: '/media-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
         title: 'Question Packet Management',
         to: '/question-packet-management',
         icon: 'ri-file-edit-line',

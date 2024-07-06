@@ -17,6 +17,10 @@ export const routes = [
         component: () => import('@/pages/subtopic-management.vue'),
       },
       {
+        path: 'media-management',
+        component: () => import('@/pages/media-management.vue'),
+      },
+      {
         path: 'question-management',
         component: () => import('@/pages/question-management.vue'),
       },

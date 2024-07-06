@@ -18,18 +18,14 @@ const pagination = ref({
   total: 0,
 });
 
-const isBulkUpsertDialogOpen = ref(false);
-const bulkUpsertFile = ref(null);
+const isUploadDialogOpen = ref(false);
+const uploadFile = ref(null);
 const successMessage = ref('');
 const errorMessage = ref('');
 
-const fetchData = async (page = 1, questionPacketId = null, searchQuery = '') => {
+const fetchData = async (page = 1, searchQuery = '') => {
   try {
-    let url = `https://gateway.berkompeten.com/api/admin/master/question?page=${page}`;
-    if (questionPacketId) {
-      console.log("Q: ", questionPacketId)
-      url += `&question_packet_id=${questionPacketId}`;
-    }
+    let url = `https://gateway.berkompeten.com/api/admin/master/media?page=${page}`;
     if (searchQuery) {
       url += `&search=${searchQuery.toLowerCase()}`;
     }
@@ -38,6 +34,7 @@ const fetchData = async (page = 1, questionPacketId = null, searchQuery = '') =>
         Authorization: `Bearer ${token}`,
       },
     });
+    
     datas.value = response.data.data.data;
     pagination.value = response.data.data;
   } catch (error) {
@@ -49,87 +46,36 @@ const fetchData = async (page = 1, questionPacketId = null, searchQuery = '') =>
   }
 };
 
-const fetchQuestionPackets = async () => {
-  try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/question-packet/fetch-all', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    questionPacketsOption.value = response.data.data.map(d => ({
-      id: d.id,
-      name: d.name,
-    }));
-  } catch (error) {
-    console.error('Error fetching question packet options:', error);
-  }
-};
-
-watch([selectedPacket, searchQuery], ([newPacketValue, newSearchValue]) => {
-  fetchData(1, newPacketValue, newSearchValue);
+watch([searchQuery], ([newSearchValue]) => {
+  fetchData(1, newSearchValue);
 });
 
 const nextPage = () => {
-  var questionPacketId = null
-  if (selectedPacket.value) {
-    questionPacketId = selectedPacket.value
-  }
-
   if (pagination.value.next_page_url) {
-    fetchData(pagination.value.current_page + 1, questionPacketId);
+    fetchData(pagination.value.current_page + 1, searchQuery.value);
   }
 };
 
 const prevPage = () => {
-  var questionPacketId = null
-  if (selectedPacket.value) {
-    questionPacketId = selectedPacket.value
-  }
-  
   if (pagination.value.prev_page_url) {
-    fetchData(pagination.value.current_page - 1, questionPacketId);
+    fetchData(pagination.value.current_page - 1, searchQuery.value);
   }
 };
 
-const createData = () => {
+const uploadMedia = () => {
   localStorage.removeItem('question_id');
-  router.push(`/question/detail`);
+  isUploadDialogOpen.value = true;
 };
 
-const downloadTemplate = async () => {
-  try {
-    const response = await axios.get(`https://gateway.berkompeten.com/api/admin/master/question/download-template`, {
-      responseType: 'blob',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'questions_template.xlsx');
-    document.body.appendChild(link);
-    link.click();
-  } catch (error) {
-    console.error("Error downloading template:", error);
-  }
-};
-
-const bulkUpsert = () => {
-  localStorage.removeItem('question_id');
-  isBulkUpsertDialogOpen.value = true;
-};
-
-const closeBulkUpsertDialog = () => {
-  isBulkUpsertDialogOpen.value = false;
-  bulkUpsertFile.value = null;
+const closeUploadDialog = () => {
+  isUploadDialogOpen.value = false;
+  uploadFile.value = null;
   successMessage.value = '';
   errorMessage.value = '';
 };
 
-const handleBulkUpsert = async () => {
-  if (!bulkUpsertFile.value) {
+const handleUpload = async () => {
+  if (!uploadFile.value) {
     errorMessage.value = 'Please upload a file'
     setTimeout(() => {
       errorMessage.value = ''
@@ -138,12 +84,12 @@ const handleBulkUpsert = async () => {
   }
 
   const formData = new FormData();
-  formData.append('file', bulkUpsertFile.value[0]);
+  formData.append('file', uploadFile.value[0]);
 
-  console.log("FILE: ", bulkUpsertFile.value[0])
+  console.log("FILE: ", uploadFile.value[0])
 
   try {
-    const response = await axios.post('https://gateway.berkompeten.com/api/admin/master/question/bulk-upsert', formData, {
+    const response = await axios.post('https://gateway.berkompeten.com/api/admin/master/upload-image', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -152,7 +98,7 @@ const handleBulkUpsert = async () => {
 
     successMessage.value = 'Bulk upsert completed successfully';
     setTimeout(() => {
-      closeBulkUpsertDialog();
+      closeUploadDialog();
       fetchData(pagination.value.current_page); 
     }, 2000);
   } catch (error) {
@@ -170,14 +116,9 @@ const handleBulkUpsert = async () => {
   }
 };
 
-const editData = (id) => {
-  localStorage.setItem('question_id', id)
-  router.push(`/question/detail`);
-};
-
 const deleteData = async (id) => {
   try {
-    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/question?question_id=${id}`, {
+    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/media?id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -190,7 +131,6 @@ const deleteData = async (id) => {
 
 onMounted(() => {
   fetchData();
-  fetchQuestionPackets();
 });
 </script>
 
@@ -198,19 +138,7 @@ onMounted(() => {
   <div>
     <div class="table-header">
       <VTextField v-model="searchQuery" label="Search" class="mx-3" solo />
-      <VSelect
-        v-model="selectedPacket"
-        :items="questionPacketsOption"
-        item-value="id"
-        item-title="name"
-        label="Filter by Packet"
-        class="mx-3"
-        solo
-        clearable
-      />
-      <VBtn color="#0080ff" class="mx-1" @click="createData">Create</VBtn>
-      <VBtn color="#0080ff" class="mx-1" @click="bulkUpsert">Bulk Upsert</VBtn>
-      <VBtn color="#0080ff" class="mx-1" @click="downloadTemplate">Download Template</VBtn>
+      <VBtn color="#0080ff" class="mx-1" @click="uploadMedia">Upload</VBtn>
     </div>
     <VCardText>
       <VAlert v-if="successMessage" type="success" dismissible @click:close="successMessage = ''">
@@ -224,40 +152,17 @@ onMounted(() => {
       <VTable fixed-header>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Packet Name</th>
-            <th>Subtopic Name</th>
-            <th>Question Number</th>
-            <th>Question</th>
-            <th>Option A</th>
-            <th>Option B</th>
-            <th>Option C</th>
-            <th>Option D</th>
-            <th>Option E</th>
-            <th>Correct Answer</th>
-            <th>Discussion</th>
-            <th>Is Active</th>
-            <th>Created Date</th>
-            <th>Actions</th>
+            <th>File Name</th>
+            <th>URL</th>
+            <th>Created At</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="question in datas" :key="question.id">
-            <td>{{ question.id }}</td>
-            <td>{{ question.question_packet.name }}</td>
-            <td>{{ question.subtopic_list.subtopic }}</td>
-            <td>{{ question.question_number }}</td>
-            <td>{{ question.question }}</td>
-            <td>{{ question.option_a }}</td>
-            <td>{{ question.option_b }}</td>
-            <td>{{ question.option_c }}</td>
-            <td>{{ question.option_d }}</td>
-            <td>{{ question.option_e }}</td>
-            <td>{{ question.correct_answer }}</td>
-            <td v-html="question.discussion"></td>
-            <td>{{ question.is_active }}</td>
-            <td>{{ question.created_date }}</td>
-            <td>
+            <td>{{ question.filename }}</td>
+            <td>{{ question.url }}</td>
+            <td>{{ question.created_at }}</td>az
+            <!-- <td>
               <div v-if="question.is_used === false">
                 <VBtn icon @click="editData(question.id)" class="mx-1" color="transparent" style=" padding: 0; border: none;background-color: transparent; box-shadow: none;">
                   <VIcon style="color: orange;">ri-edit-line</VIcon>
@@ -266,7 +171,7 @@ onMounted(() => {
                   <VIcon style="color: red;">ri-delete-bin-line</VIcon>
                 </VBtn>
               </div>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </VTable>
@@ -275,13 +180,13 @@ onMounted(() => {
       <VBtn @click="prevPage" :disabled="!pagination.prev_page_url" class="mx-1" color="#0080ff">Previous</VBtn>
       <VBtn @click="nextPage" :disabled="!pagination.next_page_url" class="mx-1" color="#0080ff">Next</VBtn>
     </div>
-    <!-- Bulk Upsert Modal -->
-    <VDialog v-model="isBulkUpsertDialogOpen" max-width="500px">
+    <!-- Upload Modal -->
+    <VDialog v-model="isUploadDialogOpen" max-width="500px">
       <VCard>
-        <VCardTitle class="text-h5">Bulk Upsert</VCardTitle>
+        <VCardTitle class="text-h5">Upload Image</VCardTitle>
         <VCardText>
           <VFileInput
-            v-model="bulkUpsertFile"
+            v-model="uploadFile"
             label="Upload Excel File"
             accept=".csv,.xlsx,.xls"
             prepend-icon="mdi-upload"
@@ -289,8 +194,8 @@ onMounted(() => {
         </VCardText>
         <VCardActions>
           <VSpacer />
-          <VBtn color="blue darken-1" text @click="closeBulkUpsertDialog">Cancel</VBtn>
-          <VBtn color="#0080ff" text @click="handleBulkUpsert">Upload</VBtn>
+          <VBtn color="blue darken-1" text @click="closeUploadDialog">Cancel</VBtn>
+          <VBtn color="#0080ff" text @click="handleUpload">Upload</VBtn>
         </VCardActions>
         <VCardText>
           <VAlert v-if="successMessage" type="success" dismissible @click:close="successMessage = ''">
