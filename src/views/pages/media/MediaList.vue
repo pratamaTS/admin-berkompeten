@@ -187,8 +187,8 @@ onMounted(() => {
         <VCardText>
           <VFileInput
             v-model="uploadFile"
-            label="Upload Excel File"
-            accept=".csv,.xlsx,.xls"
+            label="Upload File"
+            accept=".jpg,.jpeg,.png"
             prepend-icon="mdi-upload"
           />
         </VCardText>
