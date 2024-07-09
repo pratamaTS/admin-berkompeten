@@ -71,11 +71,13 @@ useRouter
     } catch (error) {
       console.error("Error submitting form:", error);
       if (error.response && error.response.data) {
-        if (error.response.data.error) {
-          Object.assign(formErrors, error.response.data.message);
-          console.log("ERROR: ", formErrors)
+        if (error.response.status === 500) {
+            errorMessage.value = error.response.data.message || 'An error occurred while saving. Please try again.';
+        } else if (error.response.data.error) {
+            Object.assign(formErrors, error.response.data.message);
+            console.log("ERROR: ", formErrors);
         } else {
-          errorMessage.value = 'An error occurred while saving the question. Please try again.';
+            errorMessage.value = 'An error occurred while saving. Please try again.';
         }
       } else {
         errorMessage.value = 'An error occurred while saving the question. Please try again.';

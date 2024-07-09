@@ -12,33 +12,58 @@ useRouter
   const route = useRoute();
   const id = localStorage.getItem('id')
   const formData = reactive({
-    name: '',
+    topic_id: 0,
+    subtopic: '',
+    competence: 0.0,
     is_active: 0,
   });
   const formErrors = reactive({});
   const token = localStorage.getItem('token');
   const successMessage = ref('');
   const errorMessage = ref('');
+  const topicListOption = ref([])
+
   const fetchData = async (id) => {
     try {
       const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/question-packet/detail?id=${id}`, {
+      `https://gateway.berkompeten.com/api/admin/master/subtopic/detail?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       Object.assign(formData, response.data.data);
-      if (id) {
-        formData.old_name = response.data.data.name;
-      }
     } catch (error) {
-      console.error("Error fetching question data:", error);
+      console.error("Error fetching subtopic data:", error);
     }
   };
+
+  const fetchTopicList = async () => {
+    try {
+      const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/topic/fetch', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      // Assuming the API response has an array of educational statuses
+      topicListOption.value = response.data.data.map(d => ({
+        id: d.id,
+        name: d.topic,
+      }))
+    } catch (error) {
+      console.error('Error fetching sub topic options:', error)
+    }
+  }
+
+  watch(() => formData.competence, (newValue) => {
+    formData.competence = parseFloat(newValue);
+  });
+
   const handleSubmit = async () => {
     try {
-      const url = `https://gateway.berkompeten.com/api/admin/master/question-packet/upsert`;
+      const url = `https://gateway.berkompeten.com/api/admin/master/subtopic/upsert`;
       const method = 'post';
+
+      console.log("FORM DATA: ", formData)
 
       await axios({
         method,
@@ -48,19 +73,21 @@ useRouter
           Authorization: `Bearer ${token}`,
         },
       });
-      successMessage.value = 'Question packet saved successfully!';
+      successMessage.value = 'Sub topic saved successfully!';
       setTimeout(() => {
         resetForm()
-        router.push('/question-packet-management'); // Redirect to the questions list page after a delay
+        router.push('/subtopic-management'); // Redirect to the questions list page after a delay
       }, 2000);
     } catch (error) {
       console.error("Error submitting form:", error);
       if (error.response && error.response.data) {
-        if (error.response.data.error) {
-          Object.assign(formErrors, error.response.data.message);
-          console.log("ERROR: ", formErrors)
+        if (error.response.status === 500) {
+            errorMessage.value = error.response.data.message || 'An error occurred while saving. Please try again.';
+        } else if (error.response.data.error) {
+            Object.assign(formErrors, error.response.data.message);
+            console.log("ERROR: ", formErrors);
         } else {
-          errorMessage.value = 'An error occurred while saving. Please try again.';
+            errorMessage.value = 'An error occurred while saving. Please try again.';
         }
       } else {
         errorMessage.value = 'An error occurred while saving. Please try again.';
@@ -70,12 +97,15 @@ useRouter
 
   const resetForm = () => {
     Object.assign(formData, {
-      name: '',
+      topic_id: 0,
+      subtopic: '',
+      competence: 0.0,
       is_active: 0,
     });
   };
 
   onMounted(() => {
+    fetchTopicList()
     if (id) {
       fetchData(id);
     }else{
@@ -87,13 +117,22 @@ useRouter
 <template>
   <VRow>
     <VCol cols="12">
-      <VCard title="Question Packet Details">
+      <VCard title="Sub Topic Details">
         <VCardText>
           <VForm @submit.prevent="handleSubmit">
             <VRow>
               <VCol cols="12">
-                <VTextField v-model="formData.name" :error-messages="formErrors.name"
-                  label="Question Packet Name" />
+                <VSelect v-model="formData.topic_id" :error-messages="formErrors.topic_id"
+                  label="Topic List" :items="topicListOption" placeholder="Select Topic List" item-value="id"
+                  item-title="name"></VSelect>
+              </VCol>
+              <VCol cols="12">
+                <VTextField v-model="formData.subtopic" :error-messages="formErrors.subtopic"
+                  label="Sub Topic" />
+              </VCol>
+              <VCol cols="12">
+                <VTextField v-model="formData.competence" :error-messages="formErrors.competence" type="number" step="0.01"
+                  label="Competence" />
               </VCol>
               <VCol cols="12">
                 <VSwitch

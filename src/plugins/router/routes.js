@@ -11,6 +11,9 @@ export const routes = [
       {
         path: 'question-packet-management',
         component: () => import('@/pages/question-packet-management.vue'),
+      },{
+        path: 'topic-management',
+        component: () => import('@/pages/topic-management.vue'),
       },
       {
         path: 'subtopic-management',
@@ -29,8 +32,24 @@ export const routes = [
         component: () => import('@/pages/question-detail.vue'),
       },
       {
+        path: 'topic/detail',
+        component: () => import('@/pages/topic-detail.vue'),
+      },
+      {
+        path: 'subtopic/detail',
+        component: () => import('@/pages/subtopic-detail.vue'),
+      },
+      {
         path: 'question-packet/detail',
         component: () => import('@/pages/question-packet-detail.vue'),
+      },
+      {
+        path: 'admin-management',
+        component: () => import('@/pages/admin-management.vue'),
+      },
+      {
+        path: 'student-management',
+        component: () => import('@/pages/student-management.vue'),
       },
       {
         path: 'profile/:tab',

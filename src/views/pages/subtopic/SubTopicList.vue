@@ -51,13 +51,13 @@ watch([searchQuery], ([newSearchValue]) => {
 
 const nextPage = () => {
   if (pagination.value.next_page_url) {
-    fetchData(pagination.value.current_page + 1);
+    fetchData(pagination.value.current_page + 1, searchQuery.value);
   }
 };
 
 const prevPage = () => {
   if (pagination.value.prev_page_url) {
-    fetchData(pagination.value.current_page - 1);
+    fetchData(pagination.value.current_page - 1, searchQuery.value);
   }
 };
 
@@ -152,7 +152,7 @@ const deleteData = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    fetchData(pagination.value.current_page);
+    fetchData(pagination.value.current_page, searchQuery);
   } catch (error) {
     console.log("err: ", error);
   }
@@ -186,6 +186,7 @@ onMounted(() => {
             <th>ID</th>
             <th>Topic</th>
             <th>SubTopic</th>
+            <th>Competence</th>
             <th>Is Active</th>
             <th>Created Date</th>
             <th>Actions</th>
@@ -196,6 +197,7 @@ onMounted(() => {
             <td>{{ item.id }}</td>
             <td>{{ item.topic.topic }}</td>
             <td>{{ item.subtopic }}</td>
+            <td>{{ item.competence }}</td>
             <td>{{ item.is_active }}</td>
             <td>{{ item.created_date }}</td>
             <td>

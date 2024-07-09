@@ -76,7 +76,7 @@ const nextPage = () => {
   }
 
   if (pagination.value.next_page_url) {
-    fetchData(pagination.value.current_page + 1, questionPacketId);
+    fetchData(pagination.value.current_page + 1, questionPacketId, searchQuery.value);
   }
 };
 
@@ -87,7 +87,7 @@ const prevPage = () => {
   }
   
   if (pagination.value.prev_page_url) {
-    fetchData(pagination.value.current_page - 1, questionPacketId);
+    fetchData(pagination.value.current_page - 1, questionPacketId, searchQuery.value);
   }
 };
 

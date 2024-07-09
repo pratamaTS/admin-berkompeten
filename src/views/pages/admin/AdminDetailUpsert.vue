@@ -12,32 +12,50 @@ useRouter
   const route = useRoute();
   const id = localStorage.getItem('id')
   const formData = reactive({
-    name: '',
+    system_id: 0,
+    topic: '',
     is_active: 0,
   });
   const formErrors = reactive({});
   const token = localStorage.getItem('token');
   const successMessage = ref('');
   const errorMessage = ref('');
+  const systemListOption = ref([])
+
   const fetchData = async (id) => {
     try {
       const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/question-packet/detail?id=${id}`, {
+      `https://gateway.berkompeten.com/api/admin/master/topic/detail?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       Object.assign(formData, response.data.data);
-      if (id) {
-        formData.old_name = response.data.data.name;
-      }
     } catch (error) {
-      console.error("Error fetching question packet data:", error);
+      console.error("Error fetching topic data:", error);
     }
   };
+
+  const fetchSystemList = async () => {
+    try {
+      const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/system/fetch', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      // Assuming the API response has an array of educational statuses
+      systemListOption.value = response.data.data.map(d => ({
+        id: d.id,
+        name: d.topic,
+      }))
+    } catch (error) {
+      console.error('Error fetching system options:', error)
+    }
+  }
+
   const handleSubmit = async () => {
     try {
-      const url = `https://gateway.berkompeten.com/api/admin/master/question-packet/upsert`;
+      const url = `https://gateway.berkompeten.com/api/admin/master/topic/upsert`;
       const method = 'post';
 
       await axios({
@@ -48,10 +66,10 @@ useRouter
           Authorization: `Bearer ${token}`,
         },
       });
-      successMessage.value = 'Question packet saved successfully!';
+      successMessage.value = 'Topic saved successfully!';
       setTimeout(() => {
         resetForm()
-        router.push('/question-packet-management'); // Redirect to the questions list page after a delay
+        router.push('/topic-management'); // Redirect to the questions list page after a delay
       }, 2000);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -72,12 +90,14 @@ useRouter
 
   const resetForm = () => {
     Object.assign(formData, {
-      name: '',
+      system_id: 0,
+      topic: '',
       is_active: 0,
     });
   };
 
   onMounted(() => {
+    fetchSystemList()
     if (id) {
       fetchData(id);
     }else{
@@ -89,13 +109,18 @@ useRouter
 <template>
   <VRow>
     <VCol cols="12">
-      <VCard title="Question Packet Details">
+      <VCard title="Topic Details">
         <VCardText>
           <VForm @submit.prevent="handleSubmit">
             <VRow>
               <VCol cols="12">
-                <VTextField v-model="formData.name" :error-messages="formErrors.name"
-                  label="Question Packet Name" />
+                <VSelect v-model="formData.system_id" :error-messages="formErrors.system_id"
+                  label="System List" :items="systemListOption" placeholder="Select System List" item-value="id"
+                  item-title="name"></VSelect>
+              </VCol>
+              <VCol cols="12">
+                <VTextField v-model="formData.topic" :error-messages="formErrors.topic"
+                  label="Topic" />
               </VCol>
               <VCol cols="12">
                 <VSwitch

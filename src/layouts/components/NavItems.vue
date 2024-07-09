@@ -40,6 +40,14 @@ onMounted(async () => {
         icon: 'ri-home-smile-line',
       }"
   />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Topic Management',
+        to: '/topic-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
   
   <VerticalNavLink
       :item="{
@@ -75,8 +83,8 @@ onMounted(async () => {
 
   <VerticalNavLink
       :item="{
-        title: 'User Management',
-        to: '/user-management',
+        title: 'Student Management',
+        to: '/student-management',
         icon: 'ri-file-edit-line',
       }"
   />

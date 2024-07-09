@@ -25,7 +25,7 @@ const errorMessage = ref('');
 
 const fetchData = async (page = 1, searchQuery = '') => {
   try {
-    let url = `https://gateway.berkompeten.com/api/admin/master/question-packet?page=${page}`;
+    let url = `https://gateway.berkompeten.com/api/admin/master/student?page=${page}`;
     if (searchQuery) {
       url += `&search=${searchQuery.toLowerCase()}`;
     }
@@ -51,23 +51,19 @@ watch([searchQuery], ([newSearchValue]) => {
 
 const nextPage = () => {
   if (pagination.value.next_page_url) {
-    fetchData(pagination.value.current_page + 1, questionPacketId, searchQuery.value);
+    fetchData(pagination.value.current_page + 1, searchQuery.value);
   }
 };
 
 const prevPage = () => {
-  if (selectedPacket.value) {
-    questionPacketId = selectedPacket.value
-  }
-  
   if (pagination.value.prev_page_url) {
-    fetchData(pagination.value.current_page - 1, questionPacketId, searchQuery.value);
+    fetchData(pagination.value.current_page - 1, searchQuery.value);
   }
 };
 
 const createData = () => {
   localStorage.removeItem('id');
-  router.push(`/question-packet/detail`);
+  router.push(`/student/detail`);
 };
 
 // const downloadTemplate = async () => {
@@ -146,12 +142,12 @@ const createData = () => {
 
 const editData = (id) => {
   localStorage.setItem('id', id)
-  router.push(`/question-packet/detail`);
+  router.push(`/student/detail`);
 };
 
 const deleteData = async (id) => {
   try {
-    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/question-packet?question_packet_id=${id}`, {
+    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/student?id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -188,7 +184,8 @@ onMounted(() => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Packet Name</th>
+            <th>Name</th>
+            <th>Email</th>
             <th>Is Active</th>
             <th>Created Date</th>
             <th>Actions</th>
@@ -198,10 +195,11 @@ onMounted(() => {
           <tr v-for="item in datas" :key="item.id">
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
+            <td>{{ item.email }}</td>
             <td>{{ item.is_active }}</td>
             <td>{{ item.created_date }}</td>
             <td>
-              <div v-if="item.is_used === false">
+              <div v-if="item.is_superadmin">
                 <VBtn icon @click="editData(item.id)" class="mx-1" color="transparent" style=" padding: 0; border: none;background-color: transparent; box-shadow: none;">
                   <VIcon style="color: orange;">ri-edit-line</VIcon>
                 </VBtn>
