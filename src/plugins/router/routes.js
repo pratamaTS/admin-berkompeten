@@ -84,7 +84,7 @@ export const routes = [
         component: () => import('@/pages/educational-status-management.vue'),
       },
       {
-        path: 'exam-date-management',
+        path: 'exam-dates-management',
         component: () => import('@/pages/exam-date-management.vue'),
       },
       {

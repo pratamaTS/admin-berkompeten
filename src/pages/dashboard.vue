@@ -1,4 +1,10 @@
 <script setup>
+import AverageDayAfterAdvis from '@/views/dashboard/AverageDayAfterAdvis.vue'
+import DailyActiveUser from '@/views/dashboard/DailyActiveUser.vue'
+import WeeklyActiveUser from '@/views/dashboard/WeeklyActiveUser.vue'
+import WeeklyPaidUser from '@/views/dashboard/WeeklyPaidUser.vue'
+import WeeklySignUp from '@/views/dashboard/WeeklySignUp.vue'
+
 
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
@@ -21,7 +27,7 @@ onMounted(async () => {
   
   if (token) {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/admin/profile', {
+      const response = await axios.get('https://gateway.berkompeten.com/api/student/profile', {
         headers: {  
           Authorization: `Bearer ${token}`,
         },
@@ -47,46 +53,39 @@ onMounted(async () => {
 
 <template>
   <VRow v-if="token" class="match-height">
-    <!-- <VCol
+    <VCol
       cols="12"
       sm="3"
     >
-      <Membership :userProfile="userProfile" />
+      <WeeklyActiveUser />
     </VCol>
 
     <VCol
       cols="12"
       sm="3"
     >
-      <CountDownExamDate />
+      <DailyActiveUser />
     </VCol>
 
     <VCol
       cols="12"
       sm="3"
     >
-      <QuestionPacketIsDone />
+      <WeeklyPaidUser />
     </VCol>
 
     <VCol
       cols="12"
       sm="3"
     >
-      <QestionPacketIsAvailable />
+      <WeeklySignUp />
     </VCol>
 
     <VCol
       cols="12"
       md="6"
     >
-      <QuestionPacketOnProgress />
+      <AverageDayAfterAdvis />
     </VCol>
-
-    <VCol
-      cols="12"
-      md="6"
-    >
-      <GetTopicToLearn />
-    </VCol> -->
   </VRow>
 </template>
