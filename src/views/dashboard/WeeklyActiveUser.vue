@@ -1,0 +1,33 @@
+<script setup>
+import axios from 'axios';
+import { computed, onMounted, ref } from 'vue';
+import VueApexCharts from 'vue3-apexcharts';
+
+const series = ref([])
+const chartOptions = computed(() => ({
+  chart: { toolbar: { show: false } },
+  xaxis: { categories: ['Today', 'Yesterday'] },
+  yaxis: { title: { text: 'Percentage' } },
+  dataLabels: { enabled: true },
+  stroke: { curve: 'smooth' }
+}))
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('https://gateway.berkompeten.com/api/admin/stats/weekly-active-users')
+    const data = response.data.data
+    series.value = [{ name: 'Active Users', data: [data.today, data.yesterday] }]
+  } catch (error) {
+    console.error('Failed to fetch weekly active users data:', error)
+  }
+})
+</script>
+
+<template>
+  <VCard>
+    <VCardText>
+      <h4 class="text-h4">Weekly Active Users</h4>
+      <VueApexCharts type="line" :options="chartOptions" :series="series" :height="350" class="my-1" />
+    </VCardText>
+  </VCard>
+</template>

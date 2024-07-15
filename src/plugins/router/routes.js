@@ -40,6 +40,30 @@ export const routes = [
         component: () => import('@/pages/subtopic-detail.vue'),
       },
       {
+        path: 'category-lab/detail',
+        component: () => import('@/pages/category-lab-detail.vue'),
+      },
+      {
+        path: 'educational-status/detail',
+        component: () => import('@/pages/educational-status-detail.vue'),
+      },
+      {
+        path: 'exam-date/detail',
+        component: () => import('@/pages/exam-date-detail.vue'),
+      },
+      {
+        path: 'lab-value/detail',
+        component: () => import('@/pages/lab-value-detail.vue'),
+      },
+      {
+        path: 'membership/detail',
+        component: () => import('@/pages/membership-detail.vue'),
+      },
+      {
+        path: 'system/detail',
+        component: () => import('@/pages/system-detail.vue'),
+      },
+      {
         path: 'question-packet/detail',
         component: () => import('@/pages/question-packet-detail.vue'),
       },
@@ -50,6 +74,34 @@ export const routes = [
       {
         path: 'student-management',
         component: () => import('@/pages/student-management.vue'),
+      },
+      {
+        path: 'category-lab-management',
+        component: () => import('@/pages/category-lab-management.vue'),
+      },
+      {
+        path: 'educational-status-management',
+        component: () => import('@/pages/educational-status-management.vue'),
+      },
+      {
+        path: 'exam-date-management',
+        component: () => import('@/pages/exam-date-management.vue'),
+      },
+      {
+        path: 'lab-value-management',
+        component: () => import('@/pages/lab-value-management.vue'),
+      },
+      {
+        path: 'student-management',
+        component: () => import('@/pages/student-management.vue'),
+      },
+      {
+        path: 'membership-management',
+        component: () => import('@/pages/membership-management.vue'),
+      },
+      {
+        path: 'system-management',
+        component: () => import('@/pages/system-management.vue'),
       },
       {
         path: 'profile/:tab',
