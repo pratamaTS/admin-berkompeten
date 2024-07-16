@@ -60,6 +60,10 @@ export const routes = [
         component: () => import('@/pages/membership-detail.vue'),
       },
       {
+        path: 'university/detail',
+        component: () => import('@/pages/university-detail.vue'),
+      },
+      {
         path: 'system/detail',
         component: () => import('@/pages/system-detail.vue'),
       },
@@ -102,6 +106,10 @@ export const routes = [
       {
         path: 'system-management',
         component: () => import('@/pages/system-management.vue'),
+      },
+      {
+        path: 'university-management',
+        component: () => import('@/pages/university-management.vue'),
       },
       {
         path: 'profile/:tab',

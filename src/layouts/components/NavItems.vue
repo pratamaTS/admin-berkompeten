@@ -43,6 +43,14 @@ onMounted(async () => {
 
   <VerticalNavLink
       :item="{
+        title: 'System Management',
+        to: '/system-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
         title: 'Topic Management',
         to: '/topic-management',
         icon: 'ri-file-edit-line',
@@ -109,6 +117,14 @@ onMounted(async () => {
       :item="{
         title: 'Category Lab Management',
         to: '/category-lab-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Lab Values Management',
+        to: '/lab-value-management',
         icon: 'ri-file-edit-line',
       }"
   />

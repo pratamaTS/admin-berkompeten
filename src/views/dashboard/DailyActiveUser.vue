@@ -11,10 +11,15 @@ const chartOptions = computed(() => ({
   dataLabels: { enabled: true },
   stroke: { curve: 'smooth' }
 }))
+var token = localStorage.getItem('token');
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/stats/daily-active-users')
+    const response = await axios.get('https://gateway.berkompeten.com/api/admin/stats/daily-active-users', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
     const data = response.data.data
     series.value = [{ name: 'Active Users', data: Object.values(data) }]
     chartOptions.value.xaxis.categories = Object.keys(data)

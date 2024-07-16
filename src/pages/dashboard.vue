@@ -55,28 +55,28 @@ onMounted(async () => {
   <VRow v-if="token" class="match-height">
     <VCol
       cols="12"
-      sm="3"
+      sm="4"
     >
       <WeeklyActiveUser />
     </VCol>
 
     <VCol
       cols="12"
-      sm="3"
+      sm="4"
     >
       <DailyActiveUser />
     </VCol>
 
     <VCol
       cols="12"
-      sm="3"
+      sm="4"
     >
       <WeeklyPaidUser />
     </VCol>
 
     <VCol
       cols="12"
-      sm="3"
+      sm="6"
     >
       <WeeklySignUp />
     </VCol>

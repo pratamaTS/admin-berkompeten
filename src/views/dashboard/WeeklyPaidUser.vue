@@ -11,10 +11,15 @@ const chartOptions = computed(() => ({
   dataLabels: { enabled: true },
   stroke: { curve: 'smooth' }
 }))
+var token = localStorage.getItem('token');
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/stats/weekly-paid-users')
+    const response = await axios.get('https://gateway.berkompeten.com/api/admin/stats/weekly-paid-users', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
     const data = response.data.data
     series.value = [{ name: 'Paid Users', data: [data.weekly_paid_users, data.total_paid_users] }]
   } catch (error) {
