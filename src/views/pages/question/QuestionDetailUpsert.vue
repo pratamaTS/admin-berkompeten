@@ -129,7 +129,10 @@ useRouter
             Authorization: `Bearer ${token}`,
           },
         });
-      subtopicListOption.value = response.data.data;
+      subtopicListOption.value = response.data.data.map(d => ({
+        id: d.id,
+        name: d.subtopic,
+      }))
     } catch (error) {
       console.error("Error fetching subtopic list:", error);
     }
@@ -244,7 +247,7 @@ useRouter
                   :items="subtopicListOption" 
                   placeholder="Select Sub Topic List" 
                   item-value="id"
-                  item-title="subtopic"
+                  item-title="name"
                   @update:search="fetchSubtopicList"
                 />
               </VCol>
