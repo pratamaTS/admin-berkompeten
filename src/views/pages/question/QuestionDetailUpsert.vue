@@ -124,7 +124,7 @@ useRouter
   const fetchSubtopicList = async (search = '') => {
     try {
       const response = await axios.get(
-        `https://gateway.berkompeten.com/api/admin/master/sub-topic-list/fetch?search=${search}`, {
+        `https://gateway.berkompeten.com/api/admin/master/subtopic/fetch?search=${search}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
