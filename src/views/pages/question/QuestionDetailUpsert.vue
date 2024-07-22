@@ -244,7 +244,7 @@ useRouter
                   :items="subtopicListOption" 
                   placeholder="Select Sub Topic List" 
                   item-value="id"
-                  item-title="name"
+                  item-title="subtopic"
                   @update:search="fetchSubtopicList"
                 />
               </VCol>
