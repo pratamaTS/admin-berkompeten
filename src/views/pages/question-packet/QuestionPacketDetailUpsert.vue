@@ -36,6 +36,8 @@ useRouter
     }
   };
   const handleSubmit = async () => {
+    formData.is_active = formData.is_active ? 1 : 0;
+    
     try {
       const url = `https://gateway.berkompeten.com/api/admin/master/question-packet/upsert`;
       const method = 'post';

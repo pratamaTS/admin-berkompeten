@@ -53,6 +53,7 @@ useRouter
   };
   const handleSubmit = async () => {
     try {
+      formData.is_active = formData.is_active ? 1 : 0;
       const url = `https://gateway.berkompeten.com/api/admin/master/question/upsert`;
       const method = 'post';
       await axios({
@@ -172,7 +173,7 @@ useRouter
   };
 
   const resetImage = () => {
-    formData.image_url = '';
+    formData.image_url = '';formData.is_active = formData.is_active ? 1 : 0;
   };
 
   watch(() => formData.question_packet_id, (newVal, oldVal) => {
