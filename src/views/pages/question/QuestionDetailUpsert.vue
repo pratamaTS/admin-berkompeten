@@ -120,22 +120,21 @@ useRouter
       console.error('Error fetching question packet options:', error)
     }
   }
-  const fetchSubTopicList = async () => {
+
+  const fetchSubtopicList = async (search = '') => {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/subtopic/fetch', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      // Assuming the API response has an array of educational statuses
-      subtopicListOption.value = response.data.data.map(d => ({
-        id: d.id,
-        name: d.subtopic,
-      }))
+      const response = await axios.get(
+        `https://gateway.berkompeten.com/api/admin/master/sub-topic-list/fetch?search=${search}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      subtopicListOption.value = response.data.data;
     } catch (error) {
-      console.error('Error fetching sub topic options:', error)
+      console.error("Error fetching subtopic list:", error);
     }
-  }
+  };
+  
   const getNextQuestionNumber = async () => {
     try {
       var url = 'https://gateway.berkompeten.com/api/admin/master/question/next-number'
@@ -232,9 +231,16 @@ useRouter
                   item-value="id" item-title="name"></VSelect>
               </VCol>
               <VCol cols="12">
-                <VSelect v-model="formData.subtopic_list_id" :error-messages="formErrors.subtopic_list_id"
-                  label="Sub Topic List" :items="subtopicListOption" placeholder="Select Sub Topic List" item-value="id"
-                  item-title="name"></VSelect>
+                <VSelect 
+                  v-model="formData.subtopic_list_id" 
+                  :error-messages="formErrors.subtopic_list_id"
+                  label="Sub Topic List" 
+                  :items="subtopicListOption" 
+                  placeholder="Select Sub Topic List" 
+                  item-value="id"
+                  item-title="name"
+                  @update:search="fetchSubtopicList"
+                />
               </VCol>
               <VCol cols="12">
                 <VTextField v-model="formData.question_number" :error-messages="formErrors.question_number"
