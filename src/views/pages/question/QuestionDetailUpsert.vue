@@ -184,11 +184,17 @@ useRouter
 
   onMounted(() => {
     fetchQuestionPackets()
-    fetchSubTopicList()
+    fetchSubtopicList()
     if (id) {
       fetchData(id);
     }else{
       localStorage.removeItem('question_id');
+    }
+  });
+
+  watch(() => formData.subtopic_list_id, (newVal) => {
+    if (newVal === '') {
+      fetchSubtopicList('');
     }
   });
 </script>
