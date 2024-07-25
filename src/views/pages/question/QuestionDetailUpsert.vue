@@ -195,6 +195,10 @@ useRouter
     }
   });
 
+  const handleSearch = (searchText) => {
+    fetchSubtopicList(searchText);
+  };
+
   watch(() => formData.subtopic_list_id, (newVal) => {
     if (newVal === '') {
       fetchSubtopicList('');
@@ -248,7 +252,7 @@ useRouter
                   placeholder="Select Sub Topic List" 
                   item-value="id"
                   item-title="name"
-                  @update:search="fetchSubtopicList"
+                  :filter="handleSearch"
                 />
               </VCol>
               <VCol cols="12">
