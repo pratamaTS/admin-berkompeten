@@ -253,6 +253,7 @@ useRouter
                   item-value="id"
                   item-title="name"
                   :filter="handleSearch"
+                  :menu-props="{ closeOnContentClick: false }"
                 />
               </VCol>
               <VCol cols="12">
