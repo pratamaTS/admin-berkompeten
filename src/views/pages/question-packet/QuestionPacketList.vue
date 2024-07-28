@@ -176,9 +176,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <VAppBar app color="#0080ff" dark>
-      <VToolbarTitle>Question Packet Management</VToolbarTitle>
-    </VAppBar>
+    <VCardTitle class="mb-4">Question Packet Management</VCardTitle>
     <div class="table-header">
       <VTextField v-model="searchQuery" label="Search" class="mx-3" solo />
       <VBtn color="#0080ff" class="mx-1" @click="createData">Create</VBtn>
