@@ -72,6 +72,10 @@ export const routes = [
         component: () => import('@/pages/question-packet-detail.vue'),
       },
       {
+        path: 'config/detail',
+        component: () => import('@/pages/config-detail.vue'),
+      },
+      {
         path: 'admin-management',
         component: () => import('@/pages/admin-management.vue'),
       },
@@ -110,6 +114,10 @@ export const routes = [
       {
         path: 'university-management',
         component: () => import('@/pages/university-management.vue'),
+      },
+      {
+        path: 'config-management',
+        component: () => import('@/pages/config-management.vue'),
       },
       {
         path: 'profile/:tab',

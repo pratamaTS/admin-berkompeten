@@ -152,5 +152,13 @@ onMounted(async () => {
         icon: 'ri-file-edit-line',
       }"
   />
+
+  <VerticalNavLink
+      :item="{
+        title: 'Config Management',
+        to: '/config-management',
+        icon: 'ri-file-edit-line',
+      }"
+  />
  
 </template>
