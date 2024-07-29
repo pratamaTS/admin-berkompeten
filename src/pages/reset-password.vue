@@ -25,7 +25,7 @@ const resetPassword = async () => {
       return
     }
 
-    const response = await axios.post('https://gateway.berkompeten.com/api/reset-password', {
+    const response = await axios.post('https://gateway.berkompeten.com/api/admin/reset-password', {
       email: form.email,
       token: form.token,
       password: form.password,

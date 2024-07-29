@@ -19,7 +19,7 @@ const sendResetLink = async () => {
       return
     }
 
-    const response = await axios.post('https://gateway.berkompeten.com/api/forgot-password', {
+    const response = await axios.post('https://gateway.berkompeten.com/api/admin/forgot-password', {
       email: form.email,
     })
 
