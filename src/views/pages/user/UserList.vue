@@ -68,6 +68,7 @@ onMounted(() => {
 
 <template>
   <div>
+    <VCardTitle class="mb-4">User Management</VCardTitle>
     <input v-model="searchQuery" placeholder="Search..." />
     <VTable height="250" fixed-header>
       <thead>

@@ -147,14 +147,20 @@ const editData = (id) => {
 
 const deleteData = async (id) => {
   try {
-    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/university?id=${id}`, {
+    const response = await axios.delete(`https://gateway.berkompeten.com/api/admin/master/university?id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    successMessage.value = response.data.message;
     fetchData(pagination.value.current_page);
   } catch (error) {
     console.log("err: ", error);
+    if (error.response && error.response.data) {
+      errorMessage.value = error.response.data.message || 'An error occurred while deleting. Please try again.';
+    } else {
+      errorMessage.value = 'An error occurred while deleting. Please try again.';
+    }
   }
 };
 
@@ -165,6 +171,7 @@ onMounted(() => {
 
 <template>
   <div>
+    <VCardTitle class="mb-4">University Management</VCardTitle>
     <div class="table-header">
       <VTextField v-model="searchQuery" label="Search" class="mx-3" solo />
       <VBtn color="#0080ff" class="mx-1" @click="createData">Create</VBtn>
