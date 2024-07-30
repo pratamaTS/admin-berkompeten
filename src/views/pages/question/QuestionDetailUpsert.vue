@@ -244,7 +244,7 @@ useRouter
                   item-value="id" item-title="name"></VSelect>
               </VCol>
               <VCol cols="12">
-                <VSelect 
+                <VAutocomplete 
                   v-model="formData.subtopic_list_id" 
                   :error-messages="formErrors.subtopic_list_id"
                   label="Sub Topic List" 
@@ -252,8 +252,8 @@ useRouter
                   placeholder="Select Sub Topic List" 
                   item-value="id"
                   item-title="name"
-                  :filter="handleSearch"
-                  :menu-props="{ closeOnContentClick: false }"
+                  :search-input.sync="searchInput"
+                  @update:search-input="handleSearch"
                 />
               </VCol>
               <VCol cols="12">
