@@ -22,20 +22,29 @@ const time = ref(null);
 const fetchData = async (id) => {
   try {
     const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/exam-date/detail?id=${id}`, {
+      `https://gateway.berkompeten.com/api/admin/master/exam-date/detail?id=${id}`, 
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
     Object.assign(formData, response.data.data);
+    // Set the date and time from the response data if available
+    if (formData.date) {
+      const dateTime = new Date(formData.date);
+      date.value = dateTime.toISOString().substr(0, 10); // Extract the date part
+      time.value = dateTime.toISOString().substr(11, 5); // Extract the time part
+    }
   } catch (error) {
     console.error("Error fetching exam date data:", error);
+    errorMessage.value = 'Failed to fetch exam date data.';
   }
 };
 
 const handleSubmit = async () => {
   try {
+    saveDateTime(); // Ensure date and time are saved before submitting
     const url = `https://gateway.berkompeten.com/api/admin/master/exam-date/upsert`;
     const method = 'post';
 
@@ -50,7 +59,7 @@ const handleSubmit = async () => {
     successMessage.value = 'Exam Date saved successfully!';
     setTimeout(() => {
       resetForm();
-      router.push('/exam-date-management'); // Redirect to the questions list page after a delay
+      router.push('/exam-date-management');
     }, 2000);
   } catch (error) {
     console.error("Error submitting form:", error);
@@ -59,7 +68,6 @@ const handleSubmit = async () => {
         errorMessage.value = error.response.data.message || 'An error occurred while saving. Please try again.';
       } else if (error.response.data.error) {
         Object.assign(formErrors, error.response.data.message);
-        console.log("ERROR: ", formErrors);
       } else {
         errorMessage.value = 'An error occurred while saving. Please try again.';
       }
@@ -76,6 +84,9 @@ const resetForm = () => {
   });
   date.value = null;
   time.value = null;
+  formErrors.value = {};
+  successMessage.value = '';
+  errorMessage.value = '';
 };
 
 const saveDateTime = () => {
@@ -103,25 +114,32 @@ onMounted(() => {
           <VForm @submit.prevent="handleSubmit">
             <VRow>
               <VCol cols="12">
-                <VDialog
+                <VMenu
+                  ref="menu"
                   v-model="menu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
                   max-width="290px"
+                  min-width="auto"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <VTextField
                       v-model="formData.date"
-                      label="Date and Time"
+                      label="Date"
                       readonly
                       v-bind="attrs"
                       v-on="on"
                       :error-messages="formErrors.date"
                     />
                   </template>
-                  <VDateTimePicker
+                  <VDatePicker
                     v-model="formData.date"
-                    @input="menu = false"
+                    no-title
+                    scrollable
+                    @change="menu = false"
                   />
-                </VDialog>
+                </VMenu>
               </VCol>
               <VCol cols="12">
                 <VSwitch
