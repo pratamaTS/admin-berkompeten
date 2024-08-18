@@ -103,34 +103,25 @@ onMounted(() => {
           <VForm @submit.prevent="handleSubmit">
             <VRow>
               <VCol cols="12">
-                <VMenu
+                <VDialog
                   v-model="menu"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
+                  max-width="290px"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <VTextField
                       v-model="formData.date"
-                      label="Date"
+                      label="Date and Time"
                       readonly
                       v-bind="attrs"
                       v-on="on"
                       :error-messages="formErrors.date"
                     />
                   </template>
-                  <VCard>
-                    <VDatePicker v-model="date" />
-                    <VTimePicker v-model="time" />
-                    <VCardActions>
-                      <VSpacer />
-                      <VBtn text color="primary" @click="menu = false">Cancel</VBtn>
-                      <VBtn text color="primary" @click="saveDateTime">OK</VBtn>
-                    </VCardActions>
-                  </VCard>
-                </VMenu>
+                  <VDateTimePicker
+                    v-model="formData.date"
+                    @input="menu = false"
+                  />
+                </VDialog>
               </VCol>
               <VCol cols="12">
                 <VSwitch
