@@ -46,7 +46,7 @@ const fetchData = async (page = 1, searchQuery = '') => {
 };
 
 watch([searchQuery], ([newSearchValue]) => {
-  fetchData(1, newSearchValue);
+  fetchData(pagination.value.current_page, newSearchValue);
 });
 
 const nextPage = () => {

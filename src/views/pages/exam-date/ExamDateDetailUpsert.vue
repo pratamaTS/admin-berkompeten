@@ -125,19 +125,20 @@ onMounted(() => {
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <VTextField
-                      v-model="formData.date"
+                      v-model="date.value"
                       label="Date"
                       readonly
                       v-bind="attrs"
                       v-on="on"
                       :error-messages="formErrors.date"
+                      @click="menu.value = true"
                     />
                   </template>
                   <VDatePicker
-                    v-model="formData.date"
+                    v-model="date.value"
                     no-title
                     scrollable
-                    @change="menu = false"
+                    @change="menu.value = false"
                   />
                 </VMenu>
               </VCol>

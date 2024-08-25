@@ -41,6 +41,30 @@ onMounted(async () => {
       }"
   />
 
+  <VerticalNavGroup
+    :item="{
+      title: 'Reports',
+      icon: 'ri-folder-line',
+    }"
+  >
+    <VerticalNavLink
+      :item="{
+        title: 'User Trial Report',
+        to: '/user-trial-report',
+        icon: 'ri-file-line',
+      }"
+    />
+    
+    <VerticalNavLink
+      :item="{
+        title: 'Payment Report',
+        to: '/payment-report',
+        icon: 'ri-file-line',
+      }"
+    />
+  </VerticalNavGroup>
+
+
   <VerticalNavLink
       :item="{
         title: 'System Management',
