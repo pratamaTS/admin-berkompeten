@@ -40,30 +40,22 @@ onMounted(async () => {
         icon: 'ri-home-smile-line',
       }"
   />
-
-  <VerticalNavGroup
+  
+  <VerticalNavLink
     :item="{
-      title: 'Reports',
-      icon: 'ri-folder-line',
+      title: 'User Trial Report',
+      to: '/user-trial-report',
+      icon: 'ri-file-line',
     }"
-  >
-    <VerticalNavLink
-      :item="{
-        title: 'User Trial Report',
-        to: '/user-trial-report',
-        icon: 'ri-file-line',
-      }"
-    />
-    
-    <VerticalNavLink
-      :item="{
-        title: 'Payment Report',
-        to: '/payment-report',
-        icon: 'ri-file-line',
-      }"
-    />
-  </VerticalNavGroup>
-
+  />
+  
+  <VerticalNavLink
+    :item="{
+      title: 'Payment Report',
+      to: '/payment-report',
+      icon: 'ri-file-line',
+    }"
+  />
 
   <VerticalNavLink
       :item="{

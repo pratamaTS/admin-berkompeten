@@ -120,6 +120,10 @@ export const routes = [
         component: () => import('@/pages/config-management.vue'),
       },
       {
+        path: 'user-trial-report',
+        component: () => import('@/pages/user-trial-report.vue'),
+      },
+      {
         path: 'profile/:tab',
         component: () => import('@/pages/account-settings.vue'),
       },

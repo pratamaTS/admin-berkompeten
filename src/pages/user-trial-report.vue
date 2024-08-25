@@ -1,5 +1,5 @@
 <script setup>
-import UserTrialReport from '@/views/pages/report/UserTrialReport.vue';
+import UserTrialReportList from '@/views/pages/report/UserTrialReportList.vue';
 
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
@@ -38,7 +38,7 @@ onMounted(async () => {
       cols="12"
       md="12"
     >
-      <UserTrialReport />
+      <UserTrialReportList />
     </VCol>
   </VRow>
 </template>
