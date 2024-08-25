@@ -58,6 +58,7 @@ const fetchData = async (page = 1, searchQuery = '') => {
     if (response.data.error) {
       errorMessage.value = response.data.message;
       users.value = [];
+      return
     }
 
     successMessage.value = response.data.message;
@@ -96,9 +97,8 @@ onMounted(() => {
   <v-container>
     <v-card>
       <v-card-title>User Trial Report</v-card-title>
-      <v-card-text>
 
-        <!-- Date Filtering Form -->
+      <v-card-text>
         <v-form >
           <v-row>
             <v-col cols="12">
@@ -106,7 +106,8 @@ onMounted(() => {
             </v-col>
           </v-row>
         </v-form>
-
+      </v-card-text>
+      <v-card-text>
         <!-- Error and Success Messages -->
         <v-alert v-if="errorMessage" type="error" dismissible @click:close="errorMessage = ''">
           {{ errorMessage }}
@@ -125,7 +126,7 @@ onMounted(() => {
           :expanded.sync="expanded"
           item-class="getRowClass"
         >
-          <template v-slot:[`item.expand`]="{ item }">
+          <template v-slot:expand="{ item }">
             <v-card class="mb-3">
               <v-card-title>Additional Details for {{ item.name }}</v-card-title>
               <v-card-text>
