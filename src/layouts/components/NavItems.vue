@@ -48,6 +48,14 @@ onMounted(async () => {
       icon: 'ri-file-line',
     }"
   />
+
+  <VerticalNavLink
+    :item="{
+      title: 'User Premium Report',
+      to: '/user-premium-report',
+      icon: 'ri-file-line',
+    }"
+  />
   
   <VerticalNavLink
     :item="{

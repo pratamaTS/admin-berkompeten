@@ -44,7 +44,7 @@ const todoHeaders = [
 // Methods
 const fetchData = async (page = 1, searchQuery = '') => {
   try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/report/user/trial', {
+    const response = await axios.get('https://gateway.berkompeten.com/api/admin/report/user/premium', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -64,7 +64,7 @@ const fetchData = async (page = 1, searchQuery = '') => {
     users.value = response.data.data.data;
     pagination.value = response.data.data;
   } catch (error) {
-    errorMessage.value = 'Failed to fetch user trial report. Please try again.';
+    errorMessage.value = 'Failed to fetch user premium report. Please try again.';
     console.log("err: ", error);
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
@@ -95,7 +95,7 @@ onMounted(() => {
 <template>
   <v-container>
     <v-card>
-      <v-card-title>User Trial Report</v-card-title>
+      <v-card-title>User Premium Report</v-card-title>
 
       <v-card-text>
         <v-form >

@@ -124,6 +124,14 @@ export const routes = [
         component: () => import('@/pages/user-trial-report.vue'),
       },
       {
+        path: 'user-premium-report',
+        component: () => import('@/pages/user-premium-report.vue'),
+      },
+      {
+        path: 'payment-report',
+        component: () => import('@/pages/payment-report.vue'),
+      },
+      {
         path: 'profile/:tab',
         component: () => import('@/pages/account-settings.vue'),
       },
