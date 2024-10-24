@@ -8,15 +8,17 @@ const route = useRoute();
 const id = localStorage.getItem('id');
 
 const formData = reactive({
-  date: '',
+  date: new Date().toISOString().substr(0, 10),
   is_active: false,
 });
 const formErrors = reactive({});
 const token = localStorage.getItem('token');
 const successMessage = ref('');
 const errorMessage = ref('');
-const menu = ref(false);
-const date = ref(null);
+const menu = ref(false);  // Menu starts closed
+
+// Set default date to today's date
+const date = reactive(new Date().toISOString().substr(0, 10)); // Default to current date
 const time = ref(null);
 
 const fetchData = async (id) => {
@@ -79,10 +81,10 @@ const handleSubmit = async () => {
 
 const resetForm = () => {
   Object.assign(formData, {
-    date: '',
+    date: new Date().toISOString().substr(0, 10),
     is_active: false,
   });
-  date.value = null;
+  date.value = new Date().toISOString().substr(0, 10); // Reset to today's date
   time.value = null;
   formErrors.value = {};
   successMessage.value = '';
@@ -90,11 +92,7 @@ const resetForm = () => {
 };
 
 const saveDateTime = () => {
-  if (date.value && time.value) {
-    const dateTime = new Date(`${date.value}T${time.value}`);
-    formData.date = dateTime.toISOString();
-    menu.value = false;
-  }
+  console.log(`Saving date and time: ${formData.date}`);
 };
 
 onMounted(() => {
@@ -115,30 +113,29 @@ onMounted(() => {
             <VRow>
               <VCol cols="12">
                 <VMenu
-                  ref="menu"
                   v-model="menu"
                   :close-on-content-click="false"
                   transition="scale-transition"
                   offset-y
                   max-width="290px"
                   min-width="auto"
+                  activator="parent" 
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <VTextField
-                      v-model="date.value"
+                      v-model="formData.date"
                       label="Date"
                       readonly
                       v-bind="attrs"
-                      v-on="on"
+                      v-on:click="menu.value = true"
                       :error-messages="formErrors.date"
-                      @click="menu.value = true"
                     />
                   </template>
                   <VDatePicker
                     v-model="date.value"
                     no-title
                     scrollable
-                    @change="menu.value = false"
+                    @change="menu.value = false; saveDateTime();"
                   />
                 </VMenu>
               </VCol>
