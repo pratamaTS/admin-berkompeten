@@ -1,4 +1,6 @@
 <script setup>
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -8,18 +10,19 @@ const route = useRoute();
 const id = localStorage.getItem('id');
 
 const formData = reactive({
-  date: new Date().toISOString().substr(0, 10),
+  date: '',
   is_active: false,
 });
 const formErrors = reactive({});
 const token = localStorage.getItem('token');
 const successMessage = ref('');
 const errorMessage = ref('');
-const menu = ref(false);  // Menu starts closed
 
-// Set default date to today's date
-const date = reactive(new Date().toISOString().substr(0, 10)); // Default to current date
-const time = ref(null);
+// Disable dates before today
+const today = new Date();
+const disablePastDates = (date) => {
+  return date < today; // Disable dates before today
+};
 
 const fetchData = async (id) => {
   try {
@@ -58,10 +61,12 @@ const handleSubmit = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    console.log("form data: ", formData)
     successMessage.value = 'Exam Date saved successfully!';
     setTimeout(() => {
       resetForm();
-      router.push('/exam-date-management');
+      router.push('/exam-dates-management');
     }, 2000);
   } catch (error) {
     console.error("Error submitting form:", error);
@@ -81,18 +86,35 @@ const handleSubmit = async () => {
 
 const resetForm = () => {
   Object.assign(formData, {
-    date: new Date().toISOString().substr(0, 10),
+    date: '',
     is_active: false,
   });
-  date.value = new Date().toISOString().substr(0, 10); // Reset to today's date
-  time.value = null;
   formErrors.value = {};
   successMessage.value = '';
   errorMessage.value = '';
 };
 
 const saveDateTime = () => {
-  console.log(`Saving date and time: ${formData.date}`);
+  if (formData.date) {
+    // Convert the selected date to MySQL TIMESTAMP format
+    const dateObj = new Date(formData.date);
+    
+    // Format the date into YYYY-MM-DD HH:MM:SS
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed in JavaScript
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+
+    // Combine the formatted parts into a MySQL-compatible timestamp string
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    // Set the formatted date to formData to be sent to the backend
+    formData.date = formattedDate;
+
+    console.log(`Saving date and time: ${formData.date}`); // For testing
+  }
 };
 
 onMounted(() => {
@@ -105,64 +127,40 @@ onMounted(() => {
 </script>
 
 <template>
-  <VRow>
-    <VCol cols="12">
-      <VCard title="Exam Date Details">
-        <VCardText>
-          <VForm @submit.prevent="handleSubmit">
-            <VRow>
-              <VCol cols="12">
-                <VMenu
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="auto"
-                  activator="parent" 
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <VTextField
-                      v-model="formData.date"
-                      label="Date"
-                      readonly
-                      v-bind="attrs"
-                      v-on:click="menu.value = true"
-                      :error-messages="formErrors.date"
-                    />
-                  </template>
-                  <VDatePicker
-                    v-model="date.value"
-                    no-title
-                    scrollable
-                    @change="menu.value = false; saveDateTime();"
-                  />
-                </VMenu>
-              </VCol>
-              <VCol cols="12">
-                <VSwitch
-                  color="#0080ff"
-                  v-model="formData.is_active"
-                  :error-messages="formErrors.is_active"
-                  label="Is Active"
-                />
-              </VCol>
-              <VCol cols="12" class="d-flex flex-wrap gap-4">
-                <VBtn type="submit" color="#0080ff">Save</VBtn>
-                <VBtn @click="resetForm" color="secondary" variant="outlined">Reset</VBtn>
-              </VCol>
-            </VRow>
-          </VForm>
-        </VCardText>
-        <VCardText>
-          <VAlert v-if="successMessage" type="success" dismissible @click:close="successMessage = ''">
-            {{ successMessage }}
-          </VAlert>
-          <VAlert v-if="errorMessage" type="error" dismissible @click:close="errorMessage = ''">
-            {{ errorMessage }}
-          </VAlert>
-        </VCardText>
-      </VCard>
-    </VCol>
-  </VRow>
+  <VCol cols="12">
+    <VCard title="Exam Date Details">
+      <VCardText>
+        <VForm @submit.prevent="handleSubmit">
+          <VCol cols="12">
+            <VueDatePicker 
+              v-model="formData.date"
+              :disabled-dates="disablePastDates"
+              format="yyyy-mm-dd hh:mm:ss"
+            >
+            </VueDatePicker>
+          </VCol>
+          <VCol cols="12" style="padding-block-end: 400px;">
+            <VSwitch
+              color="#0080ff"
+              v-model="formData.is_active"
+              :error-messages="formErrors.is_active"
+              label="Is Active"
+            />
+          </VCol>
+          <VCol cols="12" class="d-flex flex-wrap gap-4 justify-content-end">
+            <VBtn type="submit" color="#0080ff">Save</VBtn>
+            <VBtn @click="resetForm" color="secondary" variant="outlined">Reset</VBtn>
+          </VCol>
+        </VForm>
+      </VCardText>
+      <VCardText>
+        <VAlert v-if="successMessage" type="success" dismissible @click:close="successMessage = ''">
+          {{ successMessage }}
+        </VAlert>
+        <VAlert v-if="errorMessage" type="error" dismissible @click:close="errorMessage = ''">
+          {{ errorMessage }}
+        </VAlert>
+      </VCardText>
+    </VCard>
+  </VCol>
 </template>

@@ -15,6 +15,7 @@
     "@coreui/vue": "^4.10.2",
     "@floating-ui/dom": "1.5.3",
     "@iconify-json/bxl": "^1.1.10",
+    "@vuepic/vue-datepicker": "^9.0.3",
     "@vueuse/core": "^10.5.0",
     "@vueuse/math": "^10.5.0",
     "apexcharts": "3.37.0",
