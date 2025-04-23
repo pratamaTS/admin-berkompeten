@@ -10,7 +10,7 @@ const profile = ref(null)
 
 onMounted(async () => {
   try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/admin/profile', {
+      const response = await axios.get('https://gateway.berkompeten.id/api/admin/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,7 +43,7 @@ const profilePage = async () => {
 const logout = async () => {
   try {
     // Make a request to the logout endpoint on your backend
-    const response = await axios.post('https://gateway.berkompeten.com/api/admin/logout', null, {
+    const response = await axios.post('https://gateway.berkompeten.id/api/admin/logout', null, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

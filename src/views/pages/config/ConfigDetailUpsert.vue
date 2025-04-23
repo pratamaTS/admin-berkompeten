@@ -16,7 +16,7 @@ const errorMessage = ref('');
 
 const fetchData = async (id) => {
   try {
-    const response = await axios.get(`https://gateway.berkompeten.com/api/admin/master/config/detail?id=${id}`, {
+    const response = await axios.get(`https://gateway.berkompeten.id/api/admin/master/config/detail?id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -29,7 +29,7 @@ const fetchData = async (id) => {
 
 const handleSubmit = async () => {
   try {
-    const url = `https://gateway.berkompeten.com/api/admin/master/config/upsert`;
+    const url = `https://gateway.berkompeten.id/api/admin/master/config/upsert`;
     const method = 'post';
 
     await axios({

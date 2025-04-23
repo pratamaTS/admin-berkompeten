@@ -26,7 +26,7 @@ useRouter
   const fetchData = async (id) => {
     try {
       const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/lab-value/detail?id=${id}`, {
+      `https://gateway.berkompeten.id/api/admin/master/lab-value/detail?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,7 +39,7 @@ useRouter
 
   const fetchCategoryLab = async () => {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/category-lab/fetch', {
+      const response = await axios.get('https://gateway.berkompeten.id/api/admin/master/category-lab/fetch', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ useRouter
 
   const handleSubmit = async () => {
     try {
-      const url = `https://gateway.berkompeten.com/api/admin/master/lab-value/upsert`;
+      const url = `https://gateway.berkompeten.id/api/admin/master/lab-value/upsert`;
       const method = 'post';
 
       await axios({

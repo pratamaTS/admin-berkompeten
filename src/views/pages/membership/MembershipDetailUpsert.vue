@@ -29,7 +29,7 @@ useRouter
   const fetchData = async (id) => {
     try {
       const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/membership/detail?id=${id}`, {
+      `https://gateway.berkompeten.id/api/admin/master/membership/detail?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,7 +43,7 @@ useRouter
   const handleSubmit = async () => {
     try {
       formData.is_active = formData.is_active ? 1 : 0;
-      const url = `https://gateway.berkompeten.com/api/admin/master/membership/upsert`;
+      const url = `https://gateway.berkompeten.id/api/admin/master/membership/upsert`;
       const method = 'post';
 
       await axios({

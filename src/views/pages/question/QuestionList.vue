@@ -25,7 +25,7 @@ const errorMessage = ref('');
 
 const fetchData = async (page = 1, questionPacketId = null, searchQuery = '') => {
   try {
-    let url = `https://gateway.berkompeten.com/api/admin/master/question?page=${page}`;
+    let url = `https://gateway.berkompeten.id/api/admin/master/question?page=${page}`;
     if (questionPacketId) {
       console.log("Q: ", questionPacketId)
       url += `&question_packet_id=${questionPacketId}`;
@@ -51,7 +51,7 @@ const fetchData = async (page = 1, questionPacketId = null, searchQuery = '') =>
 
 const fetchQuestionPackets = async () => {
   try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/question-packet/fetch-all', {
+    const response = await axios.get('https://gateway.berkompeten.id/api/admin/master/question-packet/fetch-all', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -98,7 +98,7 @@ const createData = () => {
 
 const downloadTemplate = async () => {
   try {
-    const response = await axios.get(`https://gateway.berkompeten.com/api/admin/master/question/download-template`, {
+    const response = await axios.get(`https://gateway.berkompeten.id/api/admin/master/question/download-template`, {
       responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -143,7 +143,7 @@ const handleBulkUpsert = async () => {
   console.log("FILE: ", bulkUpsertFile.value[0])
 
   try {
-    const response = await axios.post('https://gateway.berkompeten.com/api/admin/master/question/bulk-upsert', formData, {
+    const response = await axios.post('https://gateway.berkompeten.id/api/admin/master/question/bulk-upsert', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -177,7 +177,7 @@ const editData = (id) => {
 
 const deleteData = async (id) => {
   try {
-    const response = await axios.delete(`https://gateway.berkompeten.com/api/admin/master/question?question_id=${id}`, {
+    const response = await axios.delete(`https://gateway.berkompeten.id/api/admin/master/question?question_id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

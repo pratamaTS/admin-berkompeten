@@ -25,7 +25,7 @@ const errorMessage = ref('');
 
 const fetchData = async (page = 1, searchQuery = '') => {
   try {
-    let url = `https://gateway.berkompeten.com/api/admin/master/educational-status?page=${page}`;
+    let url = `https://gateway.berkompeten.id/api/admin/master/educational-status?page=${page}`;
     if (searchQuery) {
       url += `&search=${searchQuery.toLowerCase()}`;
     }
@@ -68,7 +68,7 @@ const createData = () => {
 
 // const downloadTemplate = async () => {
 //   try {
-//     const response = await axios.get(`https://gateway.berkompeten.com/api/admin/master/question/download-template`, {
+//     const response = await axios.get(`https://gateway.berkompeten.id/api/admin/master/question/download-template`, {
 //       responseType: 'blob',
 //       headers: {
 //         Authorization: `Bearer ${token}`,
@@ -113,7 +113,7 @@ const createData = () => {
 //   console.log("FILE: ", bulkUpsertFile.value[0])
 
 //   try {
-//     const response = await axios.post('https://gateway.berkompeten.com/api/admin/master/question/bulk-upsert', formData, {
+//     const response = await axios.post('https://gateway.berkompeten.id/api/admin/master/question/bulk-upsert', formData, {
 //       headers: {
 //         'Content-Type': 'multipart/form-data',
 //         Authorization: `Bearer ${token}`,
@@ -147,7 +147,7 @@ const editData = (id) => {
 
 const deleteData = async (id) => {
   try {
-    const response = await axios.delete(`https://gateway.berkompeten.com/api/admin/master/educational-status?id=${id}`, {
+    const response = await axios.delete(`https://gateway.berkompeten.id/api/admin/master/educational-status?id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

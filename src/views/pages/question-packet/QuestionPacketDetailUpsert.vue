@@ -22,7 +22,7 @@ useRouter
   const fetchData = async (id) => {
     try {
       const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/question-packet/detail?id=${id}`, {
+      `https://gateway.berkompeten.id/api/admin/master/question-packet/detail?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,7 +39,7 @@ useRouter
     formData.is_active = formData.is_active ? 1 : 0;
     
     try {
-      const url = `https://gateway.berkompeten.com/api/admin/master/question-packet/upsert`;
+      const url = `https://gateway.berkompeten.id/api/admin/master/question-packet/upsert`;
       const method = 'post';
 
       await axios({

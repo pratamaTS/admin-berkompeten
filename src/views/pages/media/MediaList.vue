@@ -25,7 +25,7 @@ const errorMessage = ref('');
 
 const fetchData = async (page = 1, searchQuery = '') => {
   try {
-    let url = `https://gateway.berkompeten.com/api/admin/master/media?page=${page}`;
+    let url = `https://gateway.berkompeten.id/api/admin/master/media?page=${page}`;
     if (searchQuery) {
       url += `&search=${searchQuery.toLowerCase()}`;
     }
@@ -89,7 +89,7 @@ const handleUpload = async () => {
   console.log("FILE: ", uploadFile.value[0])
 
   try {
-    const response = await axios.post('https://gateway.berkompeten.com/api/admin/master/upload-image', formData, {
+    const response = await axios.post('https://gateway.berkompeten.id/api/admin/master/upload-image', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -118,7 +118,7 @@ const handleUpload = async () => {
 
 const deleteData = async (id) => {
   try {
-    await axios.delete(`https://gateway.berkompeten.com/api/admin/master/media?id=${id}`, {
+    await axios.delete(`https://gateway.berkompeten.id/api/admin/master/media?id=${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

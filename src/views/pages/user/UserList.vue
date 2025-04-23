@@ -18,7 +18,7 @@ const pagination = ref({
 
 const fetchData = async (page = 1) => {
   try {
-    const response = await axios.get(`https://gateway.berkompeten.com/api/admin/master/user?page=${page}`, {
+    const response = await axios.get(`https://gateway.berkompeten.id/api/admin/master/user?page=${page}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

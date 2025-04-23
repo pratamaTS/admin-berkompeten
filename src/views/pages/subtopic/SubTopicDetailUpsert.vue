@@ -26,7 +26,7 @@ useRouter
   const fetchData = async (id) => {
     try {
       const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/subtopic/detail?id=${id}`, {
+      `https://gateway.berkompeten.id/api/admin/master/subtopic/detail?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,7 +39,7 @@ useRouter
 
   const fetchTopicList = async () => {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/topic/fetch', {
+      const response = await axios.get('https://gateway.berkompeten.id/api/admin/master/topic/fetch', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +60,7 @@ useRouter
 
   const handleSubmit = async () => {
     try {
-      const url = `https://gateway.berkompeten.com/api/admin/master/subtopic/upsert`;
+      const url = `https://gateway.berkompeten.id/api/admin/master/subtopic/upsert`;
       const method = 'post';
 
       console.log("FORM DATA: ", formData)

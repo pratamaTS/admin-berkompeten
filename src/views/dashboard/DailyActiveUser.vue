@@ -15,7 +15,7 @@ var token = localStorage.getItem('token');
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/stats/daily-active-users', {
+    const response = await axios.get('https://gateway.berkompeten.id/api/admin/stats/daily-active-users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -44,7 +44,7 @@ const todoHeaders = [
 // Methods
 const fetchData = async (page = 1, searchQuery = '') => {
   try {
-    const response = await axios.get('https://gateway.berkompeten.com/api/admin/report/user/premium', {
+    const response = await axios.get('https://gateway.berkompeten.id/api/admin/report/user/premium', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -46,7 +46,7 @@ onMounted(async () => {
   // Retrieve the email from local storage
   if (token) {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/admin/profile', {
+      const response = await axios.get('https://gateway.berkompeten.id/api/admin/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

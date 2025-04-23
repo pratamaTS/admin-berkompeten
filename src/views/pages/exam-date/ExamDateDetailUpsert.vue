@@ -27,7 +27,7 @@ const disablePastDates = (date) => {
 const fetchData = async (id) => {
   try {
     const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/exam-date/detail?id=${id}`, 
+      `https://gateway.berkompeten.id/api/admin/master/exam-date/detail?id=${id}`, 
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ const fetchData = async (id) => {
 const handleSubmit = async () => {
   try {
     saveDateTime(); // Ensure date and time are saved before submitting
-    const url = `https://gateway.berkompeten.com/api/admin/master/exam-date/upsert`;
+    const url = `https://gateway.berkompeten.id/api/admin/master/exam-date/upsert`;
     const method = 'post';
 
     await axios({

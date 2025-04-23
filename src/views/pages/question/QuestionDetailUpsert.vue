@@ -41,7 +41,7 @@ useRouter
   const fetchData = async (id) => {
     try {
       const response = await axios.get(
-      `https://gateway.berkompeten.com/api/admin/master/question/detail?id=${id}`, {
+      `https://gateway.berkompeten.id/api/admin/master/question/detail?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +54,7 @@ useRouter
   const handleSubmit = async () => {
     try {
       formData.is_active = formData.is_active ? 1 : 0;
-      const url = `https://gateway.berkompeten.com/api/admin/master/question/upsert`;
+      const url = `https://gateway.berkompeten.id/api/admin/master/question/upsert`;
       const method = 'post';
       await axios({
         method,
@@ -106,7 +106,7 @@ useRouter
   };
   const fetchQuestionPackets = async () => {
     try {
-      const response = await axios.get('https://gateway.berkompeten.com/api/admin/master/question-packet/fetch', {
+      const response = await axios.get('https://gateway.berkompeten.id/api/admin/master/question-packet/fetch', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -124,7 +124,7 @@ useRouter
   const fetchSubtopicList = async (search = '') => {
     try {
       const response = await axios.get(
-        `https://gateway.berkompeten.com/api/admin/master/subtopic/fetch?search=${search}`, {
+        `https://gateway.berkompeten.id/api/admin/master/subtopic/fetch?search=${search}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -140,7 +140,7 @@ useRouter
   
   const getNextQuestionNumber = async () => {
     try {
-      var url = 'https://gateway.berkompeten.com/api/admin/master/question/next-number'
+      var url = 'https://gateway.berkompeten.id/api/admin/master/question/next-number'
       if (formData.question_packet_id) {
         url = url + "?question_packet_id=" + formData.question_packet_id
       }
@@ -161,7 +161,7 @@ useRouter
     const formDataImage = new FormData();
     formDataImage.append('image', file);
     try {
-      const response = await axios.post('https://gateway.berkompeten.com/api/admin/master/upload-image',
+      const response = await axios.post('https://gateway.berkompeten.id/api/admin/master/upload-image',
         formDataImage, {
           headers: {
             Authorization: `Bearer ${token}`,
