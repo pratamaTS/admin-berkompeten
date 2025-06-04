@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // Base API URL for centralization
-const API_BASE_URL = 'https://gateway.berkompeten.id'
+const API_BASE_URL = '/api'
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
